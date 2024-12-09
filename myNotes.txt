@@ -1,0 +1,17 @@
+this e-commerce project initiated as a Vite + React project.
+
+
+Libraries & Frameworks installed in project
+React Redux: https://redux.js.org/introduction/installation
+Redux Thunk Middleware : https://github.com/reduxjs/redux-thunk
+
+! React Router Dom 5.2 :  https://www.npmjs.com/package/react-router-dom/v/5.2.0
+! not latest version (7.2)
+
+Tailwind CSS: https://tailwindcss.com/docs/guides/vite from step 2
+
+React Toastify: https://www.npmjs.com/package/react-toastify
+! Lucide: https://lucide.dev/guide/installation
+! care: make sure React > npm sections selected
+
+Axios: https://axios-http.com/docs/intro
