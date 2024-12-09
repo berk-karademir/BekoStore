@@ -19,3 +19,5 @@ React Toastify: https://www.npmjs.com/package/react-toastify
 ! care: make sure React > npm sections selected
 
 Axios: https://axios-http.com/docs/intro
+
+Unicode UTF-8 : https://www.w3schools.com/charsets/ref_utf_arrows.asp

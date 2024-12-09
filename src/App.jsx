@@ -1,11 +1,12 @@
+import { ShoppingCart, User } from "lucide-react"
+import Header from "./components/Header"
 
 function App() {
 
   return (
     <>
-      <div>
-          <h1>WORK IN PROGRESS</h1>
-      </div>
+      
+        <Header/>
     </>
   )
 }

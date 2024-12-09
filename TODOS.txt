@@ -1,0 +1,3 @@
+in Header, h2 tag onClick must navigate to main page
+
+in Navbar, every icon onClick must navigate to related pages.
