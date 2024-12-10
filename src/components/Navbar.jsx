@@ -11,10 +11,10 @@ function Navbar() {
 
   return (
     <nav>
-      <div className="flex items-center justify-evenly pt-10">
+      <div className={`flex items-center justify-evenly py-10`}>
         <h3>BekoStore</h3>
         
-        <ul className="flex gap-3">
+        <ul className={`flex gap-3 ${isMenuOpen ? "" : ""}`}>
           <li>
             <User />
           </li>
