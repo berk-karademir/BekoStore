@@ -3,10 +3,11 @@ import { Menu, Search, ShoppingCart, User } from "lucide-react";
 
 function Navbar() {
   return (
-    <nav className="pt-10">
-      <div className="flex justify-around">
+    <nav>
+      <div className="flex items-center justify-evenly py-10">
         <h3>BekoStore</h3>
-        <ul className="flex">
+        
+        <ul className="flex gap-3">
           <li>
             <User />
           </li>
@@ -22,14 +23,7 @@ function Navbar() {
         </ul>
       </div>
 
-      <div className="flex flex-col items-center text-[#737373] py-12 text-[30px] tracking-tight font-[500]">
-        <ul>
-          <li>Home</li>
-          <li>Product</li>
-          <li>Pricing</li>
-          <li>Contact</li>
-        </ul>
-      </div>
+      
     </nav>
   );
 }
