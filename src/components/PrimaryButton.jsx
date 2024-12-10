@@ -2,9 +2,9 @@ import React from "react";
 
 function PrimaryButton() {
   return (
-    <div>
+    <div className="p-5">
       <button
-      className="bg-[#23A6F0] rounded w-40 h-14"
+      className="bg-[#23A6F0] rounded w-52 h-14 text-[24px] font-[700]"
       > Shop Now</button>
     </div>
   );

@@ -3,10 +3,10 @@ import { Menu, Search, ShoppingCart, User } from "lucide-react";
 
 function Navbar() {
   return (
-    <nav>
-      <div className="">
-        <h2>BekoStore</h2>
-        <ul>
+    <nav className="pt-10">
+      <div className="flex justify-around">
+        <h3>BekoStore</h3>
+        <ul className="flex">
           <li>
             <User />
           </li>
@@ -19,6 +19,15 @@ function Navbar() {
           <li>
             <Menu />
           </li>
+        </ul>
+      </div>
+
+      <div className="flex flex-col items-center text-[#737373] py-12 text-[30px] tracking-tight font-[500]">
+        <ul>
+          <li>Home</li>
+          <li>Product</li>
+          <li>Pricing</li>
+          <li>Contact</li>
         </ul>
       </div>
     </nav>
