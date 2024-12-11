@@ -5,9 +5,14 @@ function App() {
 
   return (
     <>
+    
+      
       
         <Header/>
         <ProductCard/>
+        <ProductCard/>
+        <ProductCard/>
+
     </>
   )
 }
