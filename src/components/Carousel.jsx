@@ -3,6 +3,7 @@ import PrimaryButton from "./PrimaryButton";
 
 function Carousel() {
   useEffect(() => {
+
     const slider = document.getElementById("slider");
     const next = document.getElementById("next");
     const prev = document.getElementById("prev");
@@ -61,13 +62,13 @@ function Carousel() {
           id="prev"
           className="absolute left-0 top-1/2 transform -translate-y-1/2 text-white px-4 py-2"
         >
-          &#11164;
+          &#10094;
         </button>
         <button
           id="next"
           className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white px-4 py-2"
         >
-          &#11166;
+          &#10095;
         </button>
       </div>
     </section>

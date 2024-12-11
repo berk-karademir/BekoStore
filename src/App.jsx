@@ -1,5 +1,5 @@
-import { ShoppingCart, User } from "lucide-react"
 import Header from "./components/Header"
+import ProductCard from "./components/ProductCard"
 
 function App() {
 
@@ -7,6 +7,7 @@ function App() {
     <>
       
         <Header/>
+        <ProductCard/>
     </>
   )
 }
