@@ -1,0 +1,152 @@
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
+
+const axiosInstance = axios.create({
+  baseURL: "https://workintech-fe-ecommerce.onrender.com",
+});
+
+function SignUp() {
+  const { register, handleSubmit, watch, setValue, errors } = useForm();
+  const [roles, setRoles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const history = useHistory();
+
+  const password = watch("password");
+
+  useEffect(() => {
+    axiosInstance.get("/roles").then((response) => {
+      setRoles(response.data);
+    });
+  }, []);
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const response = await axiosInstance.post("/signup", data);
+      alert("You need to click link in email to activate your account!");
+      history.goBack();
+    } catch (error) {
+      alert(error.response?.data?.message || "Error occurred!");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <h2>Signup</h2>
+      <div>
+        <label>Name</label>
+        <input
+          name="name"
+          ref={register({ required: true, minLength: 3 })}
+        />
+        {errors.name && <span>Name is required (min 3 characters).</span>}
+      </div>
+      <div>
+        <label>Email</label>
+        <input
+          name="email"
+          ref={register({
+            required: true,
+            pattern: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+          })}
+        />
+        {errors.email && <span>Invalid email address.</span>}
+      </div>
+      <div>
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          ref={register({
+            required: true,
+            minLength: 8,
+            validate: {
+              hasNumber: (value) => /\d/.test(value),
+              hasLower: (value) => /[a-z]/.test(value),
+              hasUpper: (value) => /[A-Z]/.test(value),
+              hasSpecial: (value) => /[!@#$%^&*]/.test(value),
+            },
+          })}
+        />
+        {errors.password && (
+          <span>
+            Password must be at least 8 characters, include numbers, lowercase,
+            uppercase, and special characters.
+          </span>
+        )}
+      </div>
+      <div>
+        <label>Confirm Password</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          ref={register({
+            validate: (value) => value === password,
+          })}
+        />
+        {errors.confirmPassword && <span>Passwords do not match.</span>}
+      </div>
+      <div>
+        <label>Role</label>
+        <select name="role_id" ref={register()} defaultValue="1">
+          {roles.map((role) => (
+            <option key={role.id} value={role.id}>
+              {role.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      {/* Store specific fields */}
+      {watch("role_id") === "2" && (
+        <>
+          <div>
+            <label>Store Name</label>
+            <input
+              name="store.name"
+              ref={register({ required: true, minLength: 3 })}
+            />
+          </div>
+          <div>
+            <label>Store Phone</label>
+            <input
+              name="store.phone"
+              ref={register({
+                required: true,
+                pattern: /^((\+90)?|0)(\d{10})$/,
+              })}
+            />
+          </div>
+          <div>
+            <label>Store Tax ID</label>
+            <input
+              name="store.tax_no"
+              ref={register({
+                required: true,
+                pattern: /^T\d{4}V\d{6}$/,
+              })}
+            />
+          </div>
+          <div>
+            <label>Store Bank Account</label>
+            <input
+              name="store.bank_account"
+              ref={register({
+                required: true,
+                pattern: /^TR\d{2}\d{4}\d{4}\d{4}\d{4}\d{4}$/,
+              })}
+            />
+          </div>
+        </>
+      )}
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Submitting..." : "Submit"}
+      </button>
+    </form>
+  );
+}
+
+export default SignUp;

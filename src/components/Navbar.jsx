@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import NavBarTitles from "./NavBarTitles";
+import { useHistory } from "react-router-dom";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const history = useHistory();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const goToSignUp = () => {
+    history.push("/signup");
   };
 
   return (
@@ -16,7 +22,7 @@ function Navbar() {
         
         <ul className="flex gap-3">
           <li>
-            <User />
+            <User onClick={goToSignUp} style={{ cursor: "pointer" }} />
           </li>
           <li>
             <Search />
@@ -25,7 +31,7 @@ function Navbar() {
             <ShoppingCart />
           </li>
           <li>
-            <Menu onClick={toggleMenu}/>
+            <Menu onClick={toggleMenu} />
           </li>
         </ul>
       </div>
