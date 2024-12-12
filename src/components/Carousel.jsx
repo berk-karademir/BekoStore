@@ -29,22 +29,26 @@ function Carousel() {
       <div className="relative w-full h-screen overflow-hidden">
         <div
           id="slider"
-          className="flex transition-transform duration-500 h-full"
+          className="flex transition-transform duration-500 h-full "
         >
           <div className="w-screen h-screen flex flex-col items-center justify-center flex-shrink-0 overflow-hidden bg-[url('/images/product-slide-1.jpg')] bg-cover bg-center bg-no-repeat text-white text-center p-8">
             <h2>GROCERIES DELIVERY</h2>
             <h4 className="text-3xl">
               We know how large objects will act, but things on a small scale. 1
             </h4>
-            <PrimaryButton />
+            <PrimaryButton>
+              <span className="text-xl">Shop Now</span>
+              </PrimaryButton>
           </div>
 
-          <div className="w-full h-screen flex flex-col items-center justify-center flex-shrink-0 overflow-hidden bg-[url('/images/product-slide-1.jpg')] bg-cover bg-center bg-no-repeat text-white text-center p-8">
+          <div className=" w-full h-screen flex flex-col items-center justify-center flex-shrink-0 overflow-hidden bg-[url('/images/product-slide-1.jpg')] bg-cover bg-center bg-no-repeat text-white text-center p-8">
             <h2>GROCERIES DELIVERY</h2>
             <h4 className="text-3xl">
               We know how large objects will act, but things on a small scale. 2
             </h4>
-            <PrimaryButton />
+            <PrimaryButton>
+              <span className="text-xl">Shop Now</span>
+              </PrimaryButton>
           </div>
 
           <div className="w-full h-screen flex flex-col items-center justify-center flex-shrink-0 overflow-hidden bg-[url('/images/product-slide-1.jpg')] bg-cover bg-center bg-no-repeat text-white text-center p-8">
@@ -52,7 +56,9 @@ function Carousel() {
             <h4 className="text-3xl">
               We know how large objects will act, but things on a small scale. 3
             </h4>
-            <PrimaryButton />
+            <PrimaryButton>
+              <span className="text-xl">Shop Now</span>
+              </PrimaryButton>
           </div>
 
           

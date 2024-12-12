@@ -1,12 +1,13 @@
 import React from "react";
 
-function PrimaryButton() {
+function PrimaryButton({ children }) {
   return (
-    <div className="p-5">
-      <button
-      className="bg-[#23A6F0] rounded w-52 h-14 text-[24px] font-[700]"
-      > Shop Now</button>
-    </div>
+    <>
+      <button className="w-64 py-3 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        {children}
+      </button>
+      </>
+   
   );
 }
 
