@@ -1,3 +1,7 @@
 in Header, h2 tag onClick must navigate to main page
 
 in Navbar, every icon and text onClick must navigate to related pages.
+
+
+store name inputu en az 3 karakter olmalı bu çalışıyor ve hatta 3 karakterden daha az girildiğinde auto-focus
+atıyor fakat kullanıcını validasyon uyarı mesajı almıyor.

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
-import { Link } from "react-router-dom/cjs/react-router-dom";
+import { Link, useHistory } from "react-router-dom/cjs/react-router-dom";
+import { Loader } from "lucide-react";
 
-function SignUp() {
+const SignUp = () => {
   const {
     register,
     handleSubmit,
@@ -15,12 +16,14 @@ function SignUp() {
 
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
-
+  const [showModal, setShowModal] = useState(false);
+  const history = useHistory();
+  const api = axios.create({
+    baseURL: "https://workintech-fe-ecommerce.onrender.com",
+  });
   const fetchRoles = async () => {
     try {
-      const response = await axios.get(
-        "https://workintech-fe-ecommerce.onrender.com/roles"
-      );
+      const response = await api.get("/roles");
       setRoles(response.data);
 
       // Varsayılan rol 'customer' olarak ayarlanıyor
@@ -41,85 +44,110 @@ function SignUp() {
   }, []);
 
   const onSubmit = async (data) => {
-    console.log("Submitting data:", data);
-    if (selectedRole === "store") {
-      data.store = {
+    setShowModal(true);
+    setTimeout(() => {
+      setShowModal(false);
+    }, 4000);
+    console.log("Submitting data before submit:", data);
+    const essentialData = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      role_id: data.role_id,
+    };
+    
+    const storeData = {
+      ...essentialData,
+      store: {
         name: data.storeName,
         phone: data.storePhone,
         tax_no: data.storeTaxID,
         bank_account: data.storeBankAccount,
-      };
-    }
-    delete data.storeName;
-    delete data.storePhone;
-    delete data.storeTaxID;
-    delete data.storeBankAccount;
+      },
+    };
 
-    try {
-      await axios.post(
-        "https://workintech-fe-ecommerce.onrender.com/signup",
-        data
-      );
-      alert(
-        "You need to click the link in your email to activate your account!"
-      );
-    } catch (error) {
-      console.error("Sign-up error:", error);
-      alert("Sign-up failed. Please check the form and try again.");
+
+    if (selectedRole === "store") {
+      try {
+        await api.post("/signup", storeData);
+        console.log("Data submit successful :>>>", data);
+        alert(
+          "You need to click the link in your email to activate your account!"
+        );
+        history("/")
+      } catch (error) {
+        console.error("Sign-up error:", error);
+        alert("Sign-up failed. Please check the form and try again.");
+      }
+    } else {
+      try {
+        await api.post("/signup", essentialData);
+        console.log("Data submit successful :>>>", data);
+        alert(
+          "You need to click the link in your email to activate your account!"
+        );
+      } catch (error) {
+        console.error("Sign-up error:", error);
+        alert("Sign-up failed. Please check the form and try again.");
+      }
     }
   };
   useEffect(() => {
     console.log("Updated Selected Role:", selectedRole);
   }, [selectedRole]);
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-screen h-screen flex flex-col items-center justify-center bg-gradient-to-t from-[#ff4040] to-[#096bff9c] text-[1.1rem]"
-    >
-      <h2>Sign Up BekoStore</h2>
+    <div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-screen h-screen flex flex-col items-center justify-center bg-gradient-to-t from-[#ff4040] to-[#096bff9c] text-[1.1rem]"
+      >
+        <h2>Sign Up BekoStore</h2>
 
-      {/* Name Field */}
-      <div>
-        <label>Name:</label>
-        <br />
-        <input
-          className="rounded-"
-          {...register("name", { required: "Name is required", minLength: 3 })}
-          placeholder="Your name"
-        />
-        {errors.name && <span>{errors.name.message}</span>}
-      </div>
+        {/* Name Field */}
+        <div>
+          <label>Name:</label>
+          <br />
+          <input
+            className="rounded-"
+            {...register("name", { required: "Name is required", minLength: {
+              value: 3,
+              message:"Your name must be at least 3 characters long",
+            } })}
+            placeholder="Your name"
+          />
+          {errors.name && <span>{errors.name.message}</span>}
+        </div>
 
-      {/* Email Field */}
-      <div>
-        <label>Email:</label>
-        <br />
-        <input
-          {...register("email", {
-            required: "Email is required",
-            pattern: {
-              value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
-              message: "Invalid email format",
-            },
-          })}
-          placeholder="Your email"
-        />
-        {errors.email && <span>{errors.email.message}</span>}
-      </div>
+        {/* Email Field */}
+        <div>
+          <label>Email:</label>
+          <br />
+          <input
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
+                message: "Invalid email format",
+              },
+            })}
+            placeholder="Your email"
+          />
+          {errors.email && <span>{errors.email.message}</span>}
+        </div>
 
-      {/* Password Fields */}
-      <div>
-        <label>Password:</label>
-        <br />
-        <input
-          type="password"
-          {...register("password", {
-            required: "Password is required",
-            minLength: 8,
-            validate: {
-              includesNumber: (value) =>
-                /\d/.test(value) || "Password must include a number",
-              includesLowercase: (value) =>
+        {/* Password Fields */}
+        <div>
+          <label>Password:</label>
+          <br />
+          <input
+            type="password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: 8,
+              validate: {
+                includesNumber: (value) =>
+                  /\d/.test(value) || "Password must include a number",
+                 includesLowercase: (value) =>
                 /[a-z]/.test(value) ||
                 "Password must include a lowercase letter",
               includesUppercase: (value) =>
@@ -142,7 +170,7 @@ function SignUp() {
           type="password"
           {...register("confirmPassword", {
             validate: (value) =>
-              value === watch("password") || "Passwords do not match",
+              value === watch("password") || "Passwords do not match!",
           })}
           placeholder="Confirm password"
         />
@@ -191,9 +219,12 @@ function SignUp() {
             <input
               {...register("storeName", {
                 required: "Store name is required",
-                minLength: 3,
+                minLength: {
+                  value:3,
+                  message:"Your store's name must be at least 3 characters long"
+                }
               })}
-              placeholder="Store name"
+              placeholder="(min 3 characters)"
             />
             {errors.storeName && <span>{errors.storeName.message}</span>}
           </div>
@@ -258,7 +289,20 @@ function SignUp() {
         <Link to="/login">Log in</Link>
       </div>
     </form>
-  );
+    {showModal && (
+      <div
+        className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center"
+      >
+        <div className="bg-white rounded-2xl ">
+          <div className="flex justify-center items-center ">
+            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-gray-500" role="status">
+              <span className="text-red-600"><Loader /> </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+);
 }
-
-export default SignUp;
+export default SignUp
