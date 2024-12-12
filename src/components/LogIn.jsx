@@ -36,8 +36,8 @@ const LogIn = () => {
       
 
       setTimeout(() => {
-        setIsSubmitting(false); // 4 saniye sonra işlemi tamamla
-      }, 8000);
+        setIsSubmitting(false); 
+      }, 9000);
       
       // Eğer "remember me" işaretlenmişse, token'ı localStorage'a kaydet
       if (remember) {
@@ -52,7 +52,7 @@ const LogIn = () => {
       setTimeout(() => {
         const redirectTo = location.state?.from || "/";
         history.push(redirectTo);
-      }, 6000); // 4 saniye sonra yönlendirme
+      }, 8000); // 4 saniye sonra yönlendirme
   
     } catch (error) {
       const errorMessage =
