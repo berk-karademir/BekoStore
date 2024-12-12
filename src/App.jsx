@@ -1,8 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Header from "./components/Header";
-import ProductCard from "./components/ProductCard";
+
 import SignUp from "./components/SignUp"; 
+import HomePage from "./pages/HomePage";
+import LogIn from "./components/LogIn"; 
 
 function App() {
   return (
@@ -12,12 +13,12 @@ function App() {
         path="/"
         component={() => (
           <>
-            <Header />
-            <ProductCard />
+            <HomePage/>
           </>
         )}
       />
       <Route path="/signup" component={SignUp} />
+      <Route path="/login" component={LogIn} />
     </Switch>
   );
 }
