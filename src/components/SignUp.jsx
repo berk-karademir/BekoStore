@@ -16,7 +16,6 @@ const SignUp = () => {
 
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const history = useHistory();
   const api = axios.create({
     baseURL: "https://workintech-fe-ecommerce.onrender.com",
@@ -86,6 +85,7 @@ const SignUp = () => {
         alert(
           "You need to click the link in your email to activate your account!"
         );
+        history("/")
       } catch (error) {
         console.error("Sign-up error:", error);
         alert("Sign-up failed. Please check the form and try again.");
@@ -96,7 +96,7 @@ const SignUp = () => {
     console.log("Updated Selected Role:", selectedRole);
   }, [selectedRole]);
   return (
-    <div>
+    
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-screen h-screen flex flex-col items-center justify-center bg-gradient-to-t from-[#ff4040] to-[#096bff9c] text-[1.1rem]"
@@ -279,7 +279,7 @@ const SignUp = () => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="m-10 py-1 px-10 bg-[#23A6F0] rounded-md text-white font-[600]"
+        className="m-10 py-1 px-10 bg-[#23A6F0] rounded-md text-white font-[600] "
       >
         {isSubmitting ? "Submitting..." : "Sign Up"}
       </button>
@@ -289,20 +289,8 @@ const SignUp = () => {
         <Link to="/login">Log in</Link>
       </div>
     </form>
-    {showModal && (
-      <div
-        className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center"
-      >
-        <div className="bg-white rounded-2xl ">
-          <div className="flex justify-center items-center ">
-            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-gray-500" role="status">
-              <span className="text-red-600"><Loader className="scale-125"/></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )}
-  </div>
+    
+  
 );
 }
 export default SignUp
