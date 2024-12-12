@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
+import { LogIn } from "lucide-react";
 
 const SignUp = () => {
   const {
@@ -93,11 +94,13 @@ const SignUp = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-screen h-screen flex flex-col items-center justify-center bg-gradient-to-t from-[#a1afbb] to-[#0178ff9c] text-[1rem]"
+      className="min-h-screen min-w-screen flex flex-col items-center text-[1rem] bg-gradient-to-t from-[#5431b3] via-[#66cad1] to-[#ca0a0a]"
     >
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Sign Up For BekoStore</h2>
+      <h2 className="text-3xl font-bold text-gray-800 py-10">Sign Up For BekoStore</h2>
 
-      <div className="mb-4 w-72">
+      <div className=' rounded-xl shadow-[15px_15px_5px_1px_rgba(0,0,0,0.7)] bg-[#e7ebee] p-10 '>
+
+      <div className="mb-4 w-64">
         <label className="block text-gray-700 font-medium mb-2">Name *</label>
         <input
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -110,10 +113,10 @@ const SignUp = () => {
           })}
           placeholder="Full Name"
         />
-        {errors.name && <span className="text-red-500 text-m font-semibold">{errors.name.message}</span>}
+        {errors.name && <span className="text-red-600 text-m font-semibold">{errors.name.message}</span>}
       </div>
 
-      <div className="mb-4 w-72">
+      <div className="mb-4 w-64">
         <label className="block text-gray-700 font-medium mb-2">Email address *</label>
         <input
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -126,10 +129,10 @@ const SignUp = () => {
           })}
           placeholder="example@gmail.com"
         />
-        {errors.email && <span className="text-red-500 text-m font-semibold">{errors.email.message}</span>}
+        {errors.email && <span className="text-red-600 text-m font-semibold">{errors.email.message}</span>}
       </div>
 
-      <div className="mb-4 w-72">
+      <div className="mb-4 w-64">
         <label className="block text-gray-700 font-medium mb-2">Password*</label>
         <input
           type="password"
@@ -139,21 +142,21 @@ const SignUp = () => {
             minLength: 8,
             validate: {
               includesNumber: (value) =>
-                /\d/.test(value) || "Password must include a number",
+                /\d/.test(value) || "Password must include a number.",
               includesLowercase: (value) =>
-                /[a-z]/.test(value) || "Password must include a lowercase letter",
+                /[a-z]/.test(value) || "Password must include a lowercase letter.",
               includesUppercase: (value) =>
-                /[A-Z]/.test(value) || "Password must include an uppercase letter",
+                /[A-Z]/.test(value) || "Password must include an uppercase letter.",
               includesSpecialChar: (value) =>
-                /[!@#$%^&*]/.test(value) || "Password must include a special character",
+                /[!@#$%^&*]/.test(value) || "Password must include a special character.",
             },
           })}
           placeholder="Password"
         />
-        {errors.password && <span className="text-red-500 text-m font-semibold">{errors.password.message}</span>}
+        {errors.password && <span className="text-red-600 text-m font-semibold">{errors.password.message}</span>}
       </div>
 
-      <div className="mb-4 w-72">
+      <div className="mb-4 w-64">
         <label className="block text-gray-700 font-medium mb-2">Confirm your password*</label>
         <input
           type="password"
@@ -165,11 +168,11 @@ const SignUp = () => {
           placeholder="Confirm Your Password"
         />
         {errors.confirmPassword && (
-          <span className="text-red-500 text-m font-semibold">{errors.confirmPassword.message}</span>
+          <span className="text-red-600 text-m font-semibold">{errors.confirmPassword.message}</span>
         )}
       </div>
 
-      <div className="mb-6 w-72">
+      <div className="mb-6 w-64">
         <label className="block text-gray-700 font-medium mb-2">Role*</label>
         <Controller
           name="role_id"
@@ -203,13 +206,14 @@ const SignUp = () => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-72 py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="w-64 py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
         {isSubmitting ? "Submitting..." : "Sign Up"}
       </button>
-      <div className="text-center py-10 font-bold">
-        <p>Already have an account?</p>
-        <span className="underline"> <Link to="/login">Login</Link></span>
+      <div className="flex flex-col items-center text-center font-bold pt-10">
+        <p>Already have an account?</p>  <br />
+        <span> <Link to="/login">Login <LogIn size={48} strokeWidth={3} /></Link></span>
+      </div>
       </div>
     </form>
   );
