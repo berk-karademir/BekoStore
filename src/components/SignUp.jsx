@@ -205,8 +205,12 @@ const SignUp = () => {
         disabled={isSubmitting}
         className="w-72 py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
-        {isSubmitting ? "Submitting..." : "Submit Sign up"}
+        {isSubmitting ? "Submitting..." : "Sign Up"}
       </button>
+      <div className="text-center py-10 font-bold">
+        <p>Already have an account?</p>
+        <span className="underline"> <Link to="/login">Login</Link></span>
+      </div>
     </form>
   );
 };
