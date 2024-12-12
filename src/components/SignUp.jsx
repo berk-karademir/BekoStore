@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
-import { Link, useHistory } from "react-router-dom/cjs/react-router-dom";
-import { Loader } from "lucide-react";
+import { Link, useHistory } from "react-router-dom";
 
 const SignUp = () => {
   const {
@@ -16,10 +15,12 @@ const SignUp = () => {
 
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
+
   const history = useHistory();
   const api = axios.create({
     baseURL: "https://workintech-fe-ecommerce.onrender.com",
   });
+
   const fetchRoles = async () => {
     try {
       const response = await api.get("/roles");
@@ -43,10 +44,7 @@ const SignUp = () => {
   }, []);
 
   const onSubmit = async (data) => {
-    setShowModal(true);
-    setTimeout(() => {
-      setShowModal(false);
-    }, 4000);
+    
     console.log("Submitting data before submit:", data);
     const essentialData = {
       name: data.name,
@@ -73,7 +71,7 @@ const SignUp = () => {
         alert(
           "You need to click the link in your email to activate your account!"
         );
-        history("/")
+        history.push("/")
       } catch (error) {
         console.error("Sign-up error:", error);
         alert("Sign-up failed. Please check the form and try again.");
@@ -85,7 +83,7 @@ const SignUp = () => {
         alert(
           "You need to click the link in your email to activate your account!"
         );
-        history("/")
+        history.push("/")
       } catch (error) {
         console.error("Sign-up error:", error);
         alert("Sign-up failed. Please check the form and try again.");
@@ -277,12 +275,34 @@ const SignUp = () => {
 
       {/* Submit Button */}
       <button
-        type="submit"
-        disabled={isSubmitting}
-        className="m-10 py-1 px-10 bg-[#23A6F0] rounded-md text-white font-[600] "
-      >
-        {isSubmitting ? "Submitting..." : "Sign Up"}
-      </button>
+  type="submit"
+  disabled={isSubmitting}
+  className="m-10 py-1 px-10 bg-[#23A6F0] rounded-md text-white font-[600] flex items-center justify-center"
+>
+  {isSubmitting && (
+    <svg
+      className="animate-spin h-6 w-6 text-white mr-2"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      ></circle>
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      ></path>
+    </svg>
+  )}
+  {isSubmitting ? "Submitting..." : "Sign Up"}
+</button>
 
       <div className="text-center text-2xl font-[700] text-white">
         <p>Already signed up? </p>
