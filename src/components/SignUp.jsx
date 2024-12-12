@@ -296,7 +296,7 @@ const SignUp = () => {
         <div className="bg-white rounded-2xl ">
           <div className="flex justify-center items-center ">
             <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-gray-500" role="status">
-              <span className="text-red-600"><Loader /> </span>
+              <span className="text-red-600"><Loader className="scale-125"/></span>
             </div>
           </div>
         </div>
