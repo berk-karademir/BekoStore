@@ -1,10 +1,10 @@
 import React from "react";
-import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
+import Header from "../layout/Header.jsx";
 function HomePage() {
   return (
     <main>
-      <Header />
+      <Header/>
       <ProductCard />
     </main>
   );

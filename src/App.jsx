@@ -1,10 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {Route, Switch } from "react-router-dom";
 
-import SignUp from "./components/SignUp"; 
+
 import HomePage from "./pages/HomePage";
 import LogIn from "./components/LogIn"; 
-
+import SignUp from "./components/SignUp"; 
 function App() {
   return (
     <Switch>
