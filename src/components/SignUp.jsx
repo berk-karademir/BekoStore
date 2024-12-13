@@ -70,9 +70,6 @@ const SignUp = () => {
       try {
         await api.post("/signup", storeData);
         console.log("storeData submit successful :>>>", storeData);
-        alert(
-          "You need to click the link in your email to activate your account!"
-        );
         toast.success(
           "Registration successful! Check your email for verification."
         );
@@ -240,7 +237,97 @@ const SignUp = () => {
               )}
             />
           </div>
+          {selectedRole === "store" && (
+            <>
+              <div className="mb-4 w-64">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Store Name*
+                </label>
+                <input
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  {...register("storeName", {
+                    required: "Store Name is required!",
+                    minLength: {
+                      value: 3,
+                      message: "Store Name must be at least 3 characters long.",
+                    },
+                  })}
+                  placeholder="Store Name"
+                />
+                {errors.storeName && (
+                  <span className="text-red-600 text-m font-semibold">
+                    {errors.storeName.message}
+                  </span>
+                )}
+              </div>
 
+              <div className="mb-4 w-64">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Store Phone*
+                </label>
+                <input
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  {...register("storePhone", {
+                    required: "Store Phone is required!",
+                    pattern: {
+                      value: /^\+90\d{10}$/,
+                      message: "Invalid Türkiye phone number format!",
+                    },
+                  })}
+                  placeholder="+90XXXXXXXXXX"
+                />
+                {errors.storePhone && (
+                  <span className="text-red-600 text-m font-semibold">
+                    {errors.storePhone.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="mb-4 w-64">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Store Tax ID*
+                </label>
+                <input
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  {...register("storeTaxID", {
+                    required: "Store Tax ID is required!",
+                    pattern: {
+                      value: /^T\d{4}V\d{6}$/,
+                      message: "Invalid Tax ID format!",
+                    },
+                  })}
+                  placeholder="TXXXXVXXXXXX"
+                />
+                {errors.storeTaxID && (
+                  <span className="text-red-600 text-m font-semibold">
+                    {errors.storeTaxID.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="mb-4 w-64">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Store Bank Account (IBAN)*
+                </label>
+                <input
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  {...register("storeBankAccount", {
+                    required: "Store Bank Account is required!",
+                    pattern: {
+                      value: /^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/,
+                      message: "Invalid IBAN format!",
+                    },
+                  })}
+                  placeholder="TRXXXXXXXXXXXXXX"
+                />
+                {errors.storeBankAccount && (
+                  <span className="text-red-600 text-m font-semibold">
+                    {errors.storeBankAccount.message}
+                  </span>
+                )}
+              </div>
+            </>
+          )}
           <PrimaryButton type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
               <div className="flex justify-center">
