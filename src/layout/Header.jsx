@@ -1,5 +1,5 @@
-import Navbar from "../components/Navbar";
-import Carousel from "../components/Carousel";
+import Navbar from "./Navbar";
+import Carousel from "./Carousel";
 
 function Header() {
  

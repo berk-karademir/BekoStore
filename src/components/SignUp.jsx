@@ -340,7 +340,7 @@ const SignUp = () => {
           </PrimaryButton>
         </div>
         <div className="text-gray-900 flex flex-col items-center text-center font-bold pt-10">
-          <p>Already have an account?</p> <br />
+          <p className="mb-2">Already have an account?</p>
           <span>
             <Link to="/login">
               Login <LogIn size={48} strokeWidth={3} />
