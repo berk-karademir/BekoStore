@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useHistory, useLocation } from "react-router-dom";
+import { Link , useHistory, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import PrimaryButton from "./PrimaryButton";
 import Spinner from "./Spinner";
+import { LogInIcon } from "lucide-react";
 
 const LogIn = () => {
   const {
@@ -135,6 +136,14 @@ const LogIn = () => {
           )}
         </PrimaryButton>
       </div>
+      <div className="text-gray-900 flex flex-col items-center text-center font-bold pt-10">
+          <p className="mb-2">Don't you have an account yet?</p>
+          <span>
+            <Link to="/signup">
+              SignUp <LogInIcon size={48} strokeWidth={3} />
+            </Link>
+          </span>
+        </div>
     </form>
   );
 };
