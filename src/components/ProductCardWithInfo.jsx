@@ -61,38 +61,7 @@ function ProductCardWithInfo({ children }) {
       </div>
 
 
-      <div class="flex justify-center pt-10">
-    <div class="space-y-6 max-w-md">
-        <div class="flex space-x-4">
-            <span class="text-red-500 text-4xl font-bold w-8 text-right">1.</span>
-            <div>
-                <h3 class="text-lg font-bold text-gray-900">Easy to use</h3>
-                <p class="text-gray-500 text-sm">Things on a very small that you have any direct</p>
-            </div>
-        </div>
-        <div class="flex space-x-4">
-            <span class="text-red-500 text-4xl font-bold w-8 text-right">2.</span>
-            <div>
-                <h3 class="text-lg font-bold text-gray-900">Easy to use</h3>
-                <p class="text-gray-500 text-sm">Things on a very small that you have any direct</p>
-            </div>
-        </div>
-        <div class="flex space-x-4">
-            <span class="text-red-500 text-4xl font-bold w-8 text-right">3.</span>
-            <div>
-                <h3 class="text-lg font-bold text-gray-900">Easy to use</h3>
-                <p class="text-gray-500 text-sm">Things on a very small that you have any direct</p>
-            </div>
-        </div>
-        <div class="flex space-x-4">
-            <span class="text-red-500 text-4xl font-bold w-8 text-right">4.</span>
-            <div>
-                <h3 class="text-lg font-bold text-gray-900">Easy to use</h3>
-                <p class="text-gray-500 text-sm">Things on a very small that you have any direct</p>
-            </div>
-        </div>
-    </div>
-</div>
+      
     </main>
   );
 }
