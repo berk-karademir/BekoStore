@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link , useHistory, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
 import PrimaryButton from "./PrimaryButton";
 import Spinner from "./Spinner";
 import { LogInIcon } from "lucide-react";
+import { setUser } from "../store/actions/clientActions";
+import { loginUser } from "../services/authService";
+import { handleAuthError, setAuthToken } from "../utils/authUtils";
+import { emailValidation } from "../validations/authValidations";
 
 const LogIn = () => {
   const {
@@ -15,54 +19,39 @@ const LogIn = () => {
     setError,
   } = useForm();
   
+  const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const api = axios.create({
-    baseURL: "https://workintech-fe-ecommerce.onrender.com",
-  });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const onSubmit = async (formData) => {
-    
 
+  const onSubmit = async (formData) => {
     const { email, password, remember } = formData;
   
     try {
       setIsSubmitting(true); 
+      const response = await loginUser({ email, password });
+      
+      dispatch(setUser(response.user));
 
-      const payload = { email, password };
-      
-      // Login isteğini gönder
-      const response = await api.post("/login", payload);
-      const userData = response.data;
-      
-
-      setTimeout(() => {
-        setIsSubmitting(false); 
-      }, 9000);
-      
-      // Eğer "remember me" işaretlenmişse, token'ı localStorage'a kaydet
       if (remember) {
-        localStorage.setItem("token", userData.token);
+        setAuthToken(response.token);
       }
 
-      setTimeout(() => {
-        toast.success("Login successful! Navigating to home page...");
+      toast.success("Login successful! Navigating to home page...");
 
-      },3000)
-      // Success mesajını ve yönlendirmeyi 4 saniye sonra yapmak için setTimeout kullan
+      const redirectTo = location.state?.from || "/";
       setTimeout(() => {
-        const redirectTo = location.state?.from || "/";
+        setIsSubmitting(false);
         history.push(redirectTo);
-      }, 8000); // 4 saniye sonra yönlendirme
+      }, 1000);
   
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || error.message || "Failed to log in";
+      setIsSubmitting(false);
+      const errorMessage = handleAuthError(error);
       toast.error("Error: " + errorMessage);
       setError("email", { type: "server", message: errorMessage });
     }
   };
-  
 
   return (
     <form
@@ -84,7 +73,7 @@ const LogIn = () => {
             id="email"
             type="email"
             placeholder="Enter your email address"
-            {...register("email", { required: "Email is required!" })}
+            {...register("email", emailValidation)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.email && (
@@ -147,4 +136,5 @@ const LogIn = () => {
     </form>
   );
 };
+
 export default LogIn;

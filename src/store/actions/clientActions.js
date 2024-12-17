@@ -1,3 +1,5 @@
+import axios from "axios";
+
 // Action Creators
 export const setUser = (user) => ({
     type: 'SET_USER',
@@ -19,19 +21,15 @@ export const setLanguage = (language) => ({
     payload: language
 });
 
-// Thunk Action Creator for roles
-export const fetchRoles = () => async (dispatch, getState) => {
-    const { roles } = getState().client;
-    
-    // Only fetch if roles are empty
-    if (roles.length === 0) {
-        try {
-            // Replace this with your actual API call
-            const response = await fetch('/api/roles');
-            const data = await response.json();
-            dispatch(setRoles(data));
-        } catch (error) {
-            console.error('Error fetching roles:', error);
-        }
+// Thunk Action Creator for fetching roles
+const api = axios.create({
+    baseURL: "https://workintech-fe-ecommerce.onrender.com",
+  });
+export const fetchRoles = () => async (dispatch) => {
+    try {
+        const response = await api.get('/roles');
+        dispatch(setRoles(response.data));
+    } catch (error) {
+        console.error('Error fetching roles:', error);
     }
 };

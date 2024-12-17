@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 import PrimaryButton from "./PrimaryButton";
+import { setUser, fetchRoles } from "../store/actions/clientActions";
 
 const SignUp = () => {
   const {
@@ -17,38 +19,29 @@ const SignUp = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
-
+  const dispatch = useDispatch();
   const history = useHistory();
-  const api = axios.create({
-    baseURL: "https://workintech-fe-ecommerce.onrender.com",
-  });
+  
+  // Redux store'dan rolleri al
+  const roles = useSelector(state => state.client.roles);
 
-  const fetchRoles = async () => {
-    try {
-      const response = await api.get("/roles");
-      setRoles(response.data);
+  useEffect(() => {
+    dispatch(fetchRoles());
+  }, [dispatch]);
 
-      const defaultRole = response.data.find(
-        (role) => role.code === "customer"
-      );
+  // Roller yüklendiğinde varsayılan rolü ayarla
+  useEffect(() => {
+    if (roles.length > 0) {
+      const defaultRole = roles.find(role => role.code === "customer");
       if (defaultRole) {
         setValue("role_id", defaultRole.id);
         setSelectedRole(defaultRole.code);
       }
-    } catch (error) {
-      console.error("Error fetching roles:", error);
     }
-  };
-
-  useEffect(() => {
-    fetchRoles();
-  }, []);
+  }, [roles, setValue]);
 
   const onSubmit = async (data) => {
-    console.log("Submitting data before submit:", data);
-
     const essentialData = {
       name: data.name,
       email: data.email,
@@ -66,36 +59,20 @@ const SignUp = () => {
       },
     };
 
-    if (selectedRole === "store") {
-      try {
-        await api.post("/signup", storeData);
-        console.log("storeData submit successful :>>>", storeData);
-        toast.success(
-          "Registration successful! Check your email for verification."
-        );
-        history.push("/");
-      } catch (error) {
-        console.error("Sign-up error:", error);
-        toast.error("Sign-up failed. Please check the form and try again.");
-      }
-    } else {
-      try {
-        await api.post("/signup", essentialData);
-        console.log("essentialData submit successful :>>>", storeData);
-        toast.success(
-          "Registration successful! Check your email for verification."
-        );
-        history.push("/");
-      } catch (error) {
-        console.error("Sign-up error:", error);
-        toast.error("Sign-up failed. Please check the form and try again.");
-      }
+    try {
+      const submitData = selectedRole === "store" ? storeData : essentialData;
+      const response = await axios.post("https://workintech-fe-ecommerce.onrender.com/signup", submitData);
+      dispatch(setUser({
+        ...response.data,
+        role: selectedRole
+      }));
+      
+      toast.success("Registration successful! Check your email for verification.");
+      history.push("/");
+    } catch (error) {
+      toast.error("Sign-up failed. Please check the form and try again.");
     }
   };
-
-  useEffect(() => {
-    console.log("Updated Selected Role:", selectedRole);
-  }, [selectedRole]);
 
   return (
     <>
@@ -212,7 +189,8 @@ const SignUp = () => {
             <Controller
               name="role_id"
               control={control}
-              defaultValue="customer"
+              defaultValue=""
+              rules={{ required: "Please select a role" }}
               render={({ field }) => (
                 <select
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -223,19 +201,29 @@ const SignUp = () => {
                       (role) => role.id === Number(e.target.value)
                     );
                     setSelectedRole(
-                      selectedOption ? selectedOption.code : "customer"
+                      selectedOption ? selectedOption.code : ""
                     );
                     setValue("role_id", e.target.value);
                   }}
                 >
-                  {roles.map((role) => (
-                    <option key={role.id} value={role.id}>
-                      {role.name}
-                    </option>
-                  ))}
+                  <option value="">Select a role</option>
+                  {roles && roles.length > 0 ? (
+                    roles.map((role) => (
+                      <option key={role.id} value={role.id}>
+                        {role.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" disabled>Loading roles...</option>
+                  )}
                 </select>
               )}
             />
+            {errors.role_id && (
+              <span className="text-red-600 text-m font-semibold">
+                {errors.role_id.message}
+              </span>
+            )}
           </div>
           {selectedRole === "store" && (
             <>
