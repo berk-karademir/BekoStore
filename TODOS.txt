@@ -4,4 +4,4 @@ in Navbar, every icon and text onClick must navigate to related pages.
 same for options button
 
 in which pages, user should see navbar ?
-
+add home navigation to login and signup pages
