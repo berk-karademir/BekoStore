@@ -9,7 +9,7 @@ function Blog() {
       <div className="max-w-sm bg-white rounded-lg shadow-lg overflow-hidden">
         {/* Image Section */}
         <div className="relative">
-          <div className="w-full aspect-w-1 aspect-h-1">
+          <div className="w-full ">
             <img
               src="https://via.placeholder.com/600x400"
               alt="Colorful Abstract"
