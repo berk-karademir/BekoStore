@@ -3,6 +3,7 @@ import React from 'react'
 function OurClients() {
   return (
     <section className='py-20'>
+      <h2 className='text-center mb-20'>Our Clients</h2>
         <div className='flex flex-col items-center gap-10'>
             <img src="/images/hooli.png" alt="hooli" />
             <img src="/images/lyft.png" alt="lyft" />
