@@ -82,7 +82,7 @@ const SignUp = () => {
         className="min-h-screen min-w-screen flex flex-col items-center text-[1rem] bg-gradient-to-t from-[#5431b3] via-[#66cad1] to-[#ca0a0a]"
       >
         <h2 className="text-3xl font-bold text-gray-800 py-10">
-          Sign Up For BekoStore
+          Sign Up For <Link to="/" className="hover:text-gray-600 transition-colors text-white">BekoStore</Link>
         </h2>
 
         <div className=" rounded-xl shadow-[15px_15px_5px_1px_rgba(0,0,0,0.7)] bg-[#e7ebee] p-10">

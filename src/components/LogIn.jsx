@@ -59,7 +59,7 @@ const LogIn = () => {
       className="w-screen h-screen flex flex-col items-center justify-center text-[1rem] bg-gradient-to-t from-[#ca0a0a] via-[#66cad1] to-[#5431b3]"
     >
       <h2 className="text-3xl font-bold text-gray-800 mb-6">
-        Login to BekoStore
+        Login to <Link to="/" className="hover:text-gray-600 transition-colors text-white">BekoStore</Link>
       </h2>
       <div className="rounded-xl shadow-[15px_15px_5px_1px_rgba(0,0,0,0.7)] bg-[#e7ebee] p-10">
         <div className="mb-4 w-64">
