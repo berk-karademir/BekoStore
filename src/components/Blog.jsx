@@ -2,9 +2,13 @@ import React from "react";
 
 function Blog() {
   return (
-    <section className="flex flex-col items-center justify-center mx-auto my-20 gap-32">
-        <h5 className="text-[#23A6F0]">Practice Advice</h5>
-        <h2 className="max-w-[60%] text-center">Featured Products</h2>
+    <section className="flex flex-col items-center justify-center mx-auto my-20 gap-20">
+      <h5 className="text-[#23A6F0]">Practice Advice</h5>
+      <h2 className="text-center">
+        <span className="block">Featured</span>
+        <span className="block">Products</span>
+      </h2>
+
       {/* Card Container */}
       <div className="max-w-sm bg-white rounded-lg shadow-lg overflow-hidden">
         {/* Image Section */}
@@ -104,7 +108,7 @@ function Blog() {
           </a>
         </div>
       </div>
-{/* ANOTHER CARD */}
+      {/* ANOTHER CARD */}
       <div className="max-w-sm bg-white rounded-lg shadow-lg overflow-hidden">
         {/* Image Section */}
         <div className="relative">

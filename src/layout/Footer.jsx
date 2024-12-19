@@ -1,5 +1,5 @@
+import { Button } from "@/components/ui/button";
 import React from "react";
-import PrimaryButton from "../components/PrimaryButton";
 
 function Footer() {
   return (
@@ -11,7 +11,7 @@ function Footer() {
             Consulting Agency For Your Business
           </h2>
           <p className="text-sm mb-6">we care about your business </p>
-          <PrimaryButton>Contact Us</PrimaryButton>
+          <Button>Get Started</Button>
         </div>
 
         {/* Link Grupları */}

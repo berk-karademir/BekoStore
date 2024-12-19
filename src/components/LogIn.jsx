@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import PrimaryButton from "./PrimaryButton";
 import Spinner from "./Spinner";
 import { LogInIcon } from "lucide-react";
 import { setUser } from "../store/actions/clientActions";
@@ -125,7 +124,7 @@ const LogIn = () => {
             "Login"
           )}
         </PrimaryButton> */}
-        <Button id="login-btn" type="submit" disabled={isSubmitting}>
+        <Button  type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
             <div className="flex justify-center items">
               <Spinner /> Logging in...

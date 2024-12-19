@@ -6,8 +6,8 @@ import { Link, useHistory } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
-import PrimaryButton from "./PrimaryButton";
 import { setUser, fetchRoles } from "../store/actions/clientActions";
+import { Button } from "./ui/button";
 
 const SignUp = () => {
   const {
@@ -316,7 +316,7 @@ const SignUp = () => {
               </div>
             </>
           )}
-          <PrimaryButton type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
               <div className="flex justify-center">
                 {" "}
@@ -325,7 +325,7 @@ const SignUp = () => {
             ) : (
               "Sign Up"
             )}
-          </PrimaryButton>
+          </Button>
         </div>
         <div className="text-gray-900 flex flex-col items-center text-center font-bold pt-10">
           <p className="mb-2">Already have an account?</p>
