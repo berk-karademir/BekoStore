@@ -1,5 +1,17 @@
+// Get stored user data if it exists
+let initialUser = null;
+try {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+        initialUser = JSON.parse(storedUser);
+    }
+} catch (error) {
+    console.error('Error loading stored user data:', error);
+    initialUser = null;
+}
+
 const initialState = {
-    user: {},
+    user: initialUser,
     addressList: [],
     creditCards: [],
     roles: [],

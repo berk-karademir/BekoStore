@@ -29,22 +29,34 @@ const LogIn = () => {
   
     try {
       setIsSubmitting(true); 
-      const response = await loginUser({ email, password });
+      const userData = await loginUser({ email, password });
       
-      dispatch(setUser(response.user));
+      console.log("Login response user data:", userData);
+      
+      // Make sure we have user data before storing
+      if (userData && userData.email) {
+        // Store user data in Redux
+        dispatch(setUser(userData));
+        
+        // Store user data in localStorage
+        localStorage.setItem('user', JSON.stringify(userData));
+        console.log('Stored user data:', userData);
 
-      if (remember) {
-        setAuthToken(response.token);
+        // Handle token separately
+        if (remember && userData.token) {
+          setAuthToken(userData.token);
+        }
+
+        toast.success("Login successful! Navigating to home page...");
+
+        const redirectTo = location.state?.from || "/";
+        setTimeout(() => {
+          setIsSubmitting(false);
+          history.push(redirectTo);
+        }, 4000);
+      } else {
+        throw new Error('Invalid user data received from server');
       }
-
-      toast.success("Login successful! Navigating to home page...");
-
-      const redirectTo = location.state?.from || "/";
-      setTimeout(() => {
-        setIsSubmitting(false);
-        history.push(redirectTo);
-      }, 4000);
-  
     } catch (error) {
       setIsSubmitting(false);
       const errorMessage = handleAuthError(error);

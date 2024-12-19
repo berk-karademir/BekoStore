@@ -6,6 +6,7 @@ import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import SignUp from "./components/SignUp";
 import LogIn from "./components/LogIn";
+import Profile from "./pages/Profile";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -32,6 +33,7 @@ function App() {
       <Route path="/contact" component={ContactUs} />
       <Route path="/signup" component={SignUp} />
       <Route path="/login" component={LogIn} />
+      <Route path="/profile" component={Profile} />
     </Switch>
     </>
   );

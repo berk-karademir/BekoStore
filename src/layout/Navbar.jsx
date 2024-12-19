@@ -2,17 +2,33 @@ import React, { useState } from "react";
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import NavBarTitles from "./NavBarTitles";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const history = useHistory();
+  const user = useSelector((state) => state.client.user);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const goToSignUp = () => {
-    history.push("/signup");
+  const handleUserClick = () => {
+    // Check both Redux state and localStorage
+    const storedUser = localStorage.getItem('user');
+    const hasUser = user && Object.keys(user).length > 0;
+    const hasStoredUser = storedUser && storedUser !== 'undefined';
+
+    console.log('Navbar check - Redux user:', user);
+    console.log('Navbar check - Stored user:', storedUser);
+
+    if (hasUser || hasStoredUser) {
+      console.log("User is logged in, navigating to profile");
+      history.push("/profile");
+    } else {
+      console.log("No user found, navigating to signup");
+      history.push("/signup");
+    }
   };
 
   return (
@@ -22,7 +38,7 @@ function Navbar() {
         
         <ul className="flex gap-3">
           <li>
-            <User onClick={goToSignUp} style={{ cursor: "pointer" }} />
+            <User onClick={handleUserClick} style={{ cursor: "pointer" }} />
           </li>
           <li>
             <Search />

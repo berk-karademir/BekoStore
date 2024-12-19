@@ -21,8 +21,21 @@ export const registerUser = async (userData) => {
 export const loginUser = async (credentials) => {
   try {
     const response = await authApi.post('/login', credentials);
-    return response.data;
+    console.log('Full Login Response:', response);
+    console.log('Login Response Data:', response.data);
+    
+    // Create a user object with the received data
+    const userData = {
+      name: response.data.name,
+      email: response.data.email,
+      role_id: response.data.role_id,
+      token: response.data.token
+    };
+    
+    console.log('Processed User Data:', userData);
+    return userData;
   } catch (error) {
+    console.error('Login Error:', error);
     throw error.response?.data || error.message;
   }
 };
