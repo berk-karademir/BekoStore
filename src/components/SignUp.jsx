@@ -8,6 +8,7 @@ import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 import { setUser, fetchRoles } from "../store/actions/clientActions";
 import { Button } from "./ui/button";
+import { nameValidation, emailValidation, passwordValidation, storeValidations } from "../validations/signupValidations";
 
 const SignUp = () => {
   const {
@@ -91,13 +92,7 @@ const SignUp = () => {
             </label>
             <input
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              {...register("name", {
-                required: "Name is required!",
-                minLength: {
-                  value: 3,
-                  message: "Your name must be at least 3 characters long.",
-                },
-              })}
+              {...register("name", nameValidation)}
               placeholder="Full Name"
             />
             {errors.name && (
@@ -113,13 +108,7 @@ const SignUp = () => {
             </label>
             <input
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              {...register("email", {
-                required: "Email is required!",
-                pattern: {
-                  value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
-                  message: "Invalid email format!",
-                },
-              })}
+              {...register("email", emailValidation)}
               placeholder="example@gmail.com"
             />
             {errors.email && (
@@ -136,23 +125,7 @@ const SignUp = () => {
             <input
               type="password"
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              {...register("password", {
-                required: "Password is required!",
-                minLength: 8,
-                validate: {
-                  includesNumber: (value) =>
-                    /\d/.test(value) || "Password must include a number.",
-                  includesLowercase: (value) =>
-                    /[a-z]/.test(value) ||
-                    "Password must include a lowercase letter.",
-                  includesUppercase: (value) =>
-                    /[A-Z]/.test(value) ||
-                    "Password must include an uppercase letter.",
-                  includesSpecialChar: (value) =>
-                    /[!@#$%^&*]/.test(value) ||
-                    "Password must include a special character.",
-                },
-              })}
+              {...register("password", passwordValidation)}
               placeholder="Password"
             />
             {errors.password && (
@@ -233,13 +206,7 @@ const SignUp = () => {
                 </label>
                 <input
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("storeName", {
-                    required: "Store Name is required!",
-                    minLength: {
-                      value: 3,
-                      message: "Store Name must be at least 3 characters long.",
-                    },
-                  })}
+                  {...register("storeName", storeValidations.storeName)}
                   placeholder="Store Name"
                 />
                 {errors.storeName && (
@@ -255,13 +222,7 @@ const SignUp = () => {
                 </label>
                 <input
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("storePhone", {
-                    required: "Store Phone is required!",
-                    pattern: {
-                      value: /^\+90\d{10}$/,
-                      message: "Invalid Türkiye phone number format!",
-                    },
-                  })}
+                  {...register("storePhone", storeValidations.storePhone)}
                   placeholder="+90XXXXXXXXXX"
                 />
                 {errors.storePhone && (
@@ -277,13 +238,7 @@ const SignUp = () => {
                 </label>
                 <input
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("storeTaxID", {
-                    required: "Store Tax ID is required!",
-                    pattern: {
-                      value: /^T\d{4}V\d{6}$/,
-                      message: "Invalid Tax ID format!",
-                    },
-                  })}
+                  {...register("storeTaxID", storeValidations.storeTaxID)}
                   placeholder="TXXXXVXXXXXX"
                 />
                 {errors.storeTaxID && (
@@ -299,13 +254,7 @@ const SignUp = () => {
                 </label>
                 <input
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("storeBankAccount", {
-                    required: "Store Bank Account is required!",
-                    pattern: {
-                      value: /^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/,
-                      message: "Invalid IBAN format!",
-                    },
-                  })}
+                  {...register("storeBankAccount", storeValidations.storeBankAccount)}
                   placeholder="TRXXXXXXXXXXXXXX"
                 />
                 {errors.storeBankAccount && (

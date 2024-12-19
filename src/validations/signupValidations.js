@@ -1,3 +1,4 @@
+// Email validation for signup
 export const emailValidation = {
   required: "Email is required!",
   pattern: {
@@ -6,6 +7,7 @@ export const emailValidation = {
   },
 };
 
+// Password validation for signup with additional security requirements
 export const passwordValidation = {
   required: "Password is required!",
   minLength: {
@@ -20,6 +22,7 @@ export const passwordValidation = {
     /[!@#$%^&*]/.test(value) || "Password must include a special character.",
 };
 
+// Name validation for signup
 export const nameValidation = {
   required: "Name is required!",
   minLength: {
@@ -28,6 +31,7 @@ export const nameValidation = {
   },
 };
 
+// Store-related validations for signup
 export const storeValidations = {
   storeName: {
     required: "Store Name is required!",
@@ -43,11 +47,18 @@ export const storeValidations = {
       message: "Invalid Türkiye phone number format!",
     },
   },
-  storeAddress: {
-    required: "Store Address is required!",
-    minLength: {
-      value: 10,
-      message: "Address must be at least 10 characters long.",
+  storeTaxID: {
+    required: "Store Tax ID is required!",
+    pattern: {
+      value: /^T\d{4}V\d{6}$/,
+      message: "Invalid Tax ID format!",
+    },
+  },
+  storeBankAccount: {
+    required: "Store Bank Account is required!",
+    pattern: {
+      value: /^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/,
+      message: "Invalid IBAN format!",
     },
   },
 };

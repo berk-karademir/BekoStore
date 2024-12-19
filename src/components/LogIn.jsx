@@ -8,7 +8,7 @@ import { LogInIcon } from "lucide-react";
 import { setUser } from "../store/actions/clientActions";
 import { loginUser } from "../services/authService";
 import { handleAuthError, setAuthToken } from "../utils/authUtils";
-import { emailValidation } from "../validations/authValidations";
+import { emailValidation, passwordValidation } from "../validations/loginValidations";
 import { Button } from "./ui/button";
 
 const LogIn = () => {
@@ -43,7 +43,7 @@ const LogIn = () => {
       setTimeout(() => {
         setIsSubmitting(false);
         history.push(redirectTo);
-      }, 1000);
+      }, 4000);
   
     } catch (error) {
       setIsSubmitting(false);
@@ -93,7 +93,7 @@ const LogIn = () => {
           <input
             id="password"
             type="password"
-            {...register("password", { required: "Password is required!" })}
+            {...register("password", passwordValidation)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.password && (
