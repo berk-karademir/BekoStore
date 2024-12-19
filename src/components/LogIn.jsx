@@ -10,6 +10,7 @@ import { setUser } from "../store/actions/clientActions";
 import { loginUser } from "../services/authService";
 import { handleAuthError, setAuthToken } from "../utils/authUtils";
 import { emailValidation } from "../validations/authValidations";
+import { Button } from "./ui/button";
 
 const LogIn = () => {
   const {
@@ -115,7 +116,7 @@ const LogIn = () => {
           </label>
         </div>
 
-        <PrimaryButton id="login-btn" type="submit" disabled={isSubmitting}>
+        {/* <PrimaryButton id="login-btn" type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
             <div className="flex justify-center">
               <Spinner /> Logging in...
@@ -123,7 +124,16 @@ const LogIn = () => {
           ) : (
             "Login"
           )}
-        </PrimaryButton>
+        </PrimaryButton> */}
+        <Button id="login-btn" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <div className="flex justify-center items">
+              <Spinner /> Logging in...
+            </div>
+          ) : (
+            "Login"
+          )}
+        </Button>
       </div>
       <div className="text-gray-900 flex flex-col items-center text-center font-bold pt-10">
           <p className="mb-2">Don't you have an account yet?</p>
