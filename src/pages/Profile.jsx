@@ -1,11 +1,18 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { User } from "lucide-react";
+import { fetchRoles } from "../store/actions/clientActions";
 
 const Profile = () => {
   const user = useSelector((state) => state.client.user);
+  const roles = useSelector((state) => state.client.roles);
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchRoles());
+  }, [dispatch]);
 
   console.log("Current user data:", user);
 
@@ -25,6 +32,13 @@ const Profile = () => {
       </div>
     );
   }
+
+  // Get role name from role_id
+  const getUserRole = () => {
+    if (!roles || roles.length === 0) return "Loading...";
+    const userRole = roles.find(role => role.id === Number(user.role_id));
+    return userRole ? userRole.name : "Unknown Role";
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-t from-[#5431b3] via-[#66cad1] to-[#ca0a0a] py-12 px-4 sm:px-6 lg:px-8">
@@ -47,9 +61,9 @@ const Profile = () => {
             </div>
             <div className="border-b pb-4">
               <p className="text-sm font-medium text-gray-500">Role</p>
-              <p className="text-lg text-gray-800 capitalize">{user.role}</p>
+              <p className="text-lg text-gray-800 capitalize">{getUserRole()}</p>
             </div>
-            {user.role === "store" && user.store && (
+            {user.store && (
               <>
                 <div className="border-b pb-4">
                   <p className="text-sm font-medium text-gray-500">Store Name</p>
