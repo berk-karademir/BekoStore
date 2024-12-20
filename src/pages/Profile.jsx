@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { User } from "lucide-react";
-import { fetchRoles } from "../store/actions/clientActions";
+import { User, LogOut } from "lucide-react";
+import { fetchRoles, logout } from "../store/actions/clientActions";
 
 const Profile = () => {
   const user = useSelector((state) => state.client.user);
@@ -23,6 +23,11 @@ const Profile = () => {
       history.push("/login");
     }
   }, [user, history]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    history.push("/");  // Redirect to home page instead of login
+  };
 
   // Show loading state while checking user
   if (!user || Object.keys(user).length === 0) {
@@ -83,6 +88,15 @@ const Profile = () => {
                 </div>
               </>
             )}
+          </div>
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+            >
+              <LogOut size={20} />
+              Log Out
+            </button>
           </div>
         </div>
       </div>

@@ -21,10 +21,20 @@ export const setLanguage = (language) => ({
     payload: language
 });
 
+// Logout action
+export const logout = () => {
+    // Remove token from localStorage if it exists
+    localStorage.removeItem('token');
+    return {
+        type: 'LOGOUT'
+    };
+};
+
 // Thunk Action Creator for fetching roles
 const api = axios.create({
     baseURL: "https://workintech-fe-ecommerce.onrender.com",
-  });
+});
+
 export const fetchRoles = () => async (dispatch) => {
     try {
         const response = await api.get('/roles');
