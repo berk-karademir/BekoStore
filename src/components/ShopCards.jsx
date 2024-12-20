@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from "../services/authService";
 import { setProductList, setFetchState, setLimit, setOffset, setTotal } from '../store/actions/productActions';
@@ -6,6 +6,7 @@ import { setProductList, setFetchState, setLimit, setOffset, setTotal } from '..
 function ShopCards() {
   const dispatch = useDispatch();
   const { productList, fetchState, limit, offset, total } = useSelector(state => state.product);
+  const productsRef = useRef(null);
 
   useEffect(() => {
     // Set initial limit to 4 items per page
@@ -36,17 +37,23 @@ function ShopCards() {
     }
   }, [dispatch, fetchState]);
 
+  const scrollToProducts = () => {
+    if (productsRef.current) {
+      productsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const handlePrevPage = () => {
     if (offset > 0) {
       dispatch(setOffset(offset - limit));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToProducts();
     }
   };
 
   const handleNextPage = () => {
     if (offset + limit < total) {
       dispatch(setOffset(offset + limit));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToProducts();
     }
   };
 
@@ -61,7 +68,7 @@ function ShopCards() {
 
   return (
     <section className="p-10 bg-[#FAFAFA]">
-      <div className="space-y-6">
+      <div ref={productsRef} className="space-y-6">
         {currentProducts.map((product) => (
           <div key={product.id} className="bg-[#ECECEC] flex flex-col justify-between rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div className="flex flex-col justify-center flex-grow">
