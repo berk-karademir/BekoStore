@@ -48,3 +48,14 @@ export const fetchRoles = async () => {
     throw error.response?.data || error.message;
   }
 };
+
+export const fetchProducts = async () => {
+  try {
+    const response = await authApi.get('/products');
+    console.log('Products Response:', response.data); 
+    return response.data.products; 
+  } catch (error) {
+    console.error('Error fetching products:', error); 
+    throw error.response?.data || error.message;
+  }
+};
