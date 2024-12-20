@@ -23,8 +23,9 @@ export const setLanguage = (language) => ({
 
 // Logout action
 export const logout = () => {
-    // Remove token from localStorage if it exists
+    // Remove all user-related data from localStorage
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     return {
         type: 'LOGOUT'
     };
