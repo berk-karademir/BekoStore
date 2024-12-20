@@ -14,13 +14,10 @@ const Profile = () => {
     dispatch(fetchRoles());
   }, [dispatch]);
 
-  console.log("Current user data:", user);
-
   // If no user is logged in, redirect to login
   React.useEffect(() => {
-    if (!user || Object.keys(user).length === 0) {
-      console.log("No user found, redirecting to login");
-      history.push("/login");
+    if (!user) {
+      history.push("/signup");
     }
   }, [user, history]);
 
@@ -30,12 +27,8 @@ const Profile = () => {
   };
 
   // Show loading state while checking user
-  if (!user || Object.keys(user).length === 0) {
-    return (
-      <div className="min-h-screen bg-gradient-to-t from-[#5431b3] via-[#66cad1] to-[#ca0a0a] flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
-      </div>
-    );
+  if (!user) {
+    return null; // Return null since we're redirecting
   }
 
   // Get role name from role_id

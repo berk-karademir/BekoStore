@@ -41,6 +41,14 @@ const clientReducer = (state = initialState, action) => {
                 ...state,
                 language: action.payload
             };
+        case 'LOGOUT':
+            return {
+                ...state,
+                user: null,
+                addressList: [],
+                creditCards: [],
+                roles: []
+            };
         default:
             return state;
     }
