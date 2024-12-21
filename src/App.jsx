@@ -9,6 +9,7 @@ import LogIn from "./components/LogIn";
 import Profile from "./pages/Profile";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import OurTeam from "./pages/OurTeam";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
       <Route exact path="/" component={HomePage} />
       <Route path="/shop" component={ShopPage} />
       <Route path="/about" component={AboutUs} />
+      <Route path="/team" component={OurTeam} />
       <Route path="/contact" component={ContactUs} />
       <Route path="/signup" component={SignUp} />
       <Route path="/login" component={LogIn} />
