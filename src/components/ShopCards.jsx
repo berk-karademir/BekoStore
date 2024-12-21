@@ -83,7 +83,7 @@ function ShopCards() {
             </div>
             <div className="flex items-center mt-4">
               <img
-                src={product.image || '/images/product-1.png'}
+                src={product.images && product.images.length > 0 ? product.images[0].url : '/images/product-1.png'}
                 alt={product.name || 'Product'}
                 className="w-32 h-32 object-contain"
                 onError={(e) => {

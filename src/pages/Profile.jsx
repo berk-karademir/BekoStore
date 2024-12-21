@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { User, LogOut } from "lucide-react";
 import { fetchRoles, logout } from "../store/actions/clientActions";
+import Header from "../layout/Header.jsx";
 
 const Profile = () => {
   const user = useSelector((state) => state.client.user);
@@ -40,6 +41,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-t from-[#5431b3] via-[#66cad1] to-[#ca0a0a] py-12 px-4 sm:px-6 lg:px-8">
+      <Header />
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4">
         <div className="p-8">
           <div className="flex items-center justify-center mb-6">
