@@ -19,8 +19,7 @@ function Navbar() {
     const hasUser = user && Object.keys(user).length > 0;
     const hasStoredUser = storedUser && storedUser !== 'undefined';
 
-    console.log('Navbar check - Redux user:', user);
-    console.log('Navbar check - Stored user:', storedUser);
+    
 
     if (hasUser || hasStoredUser) {
       console.log("User is logged in, navigating to profile");
@@ -34,7 +33,7 @@ function Navbar() {
   return (
     <nav>
       <div className={`flex items-center justify-evenly pt-10 ${isMenuOpen ? '' : 'pb-10'}`} >
-        <h3>BekoStore</h3>
+        <h3 onClick={() => history.push("/")}>BekoStore</h3>
         
         <ul className="flex gap-3">
           <li>
