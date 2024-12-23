@@ -13,7 +13,7 @@ const OurTeam = () => {
     },
     {
       name: "Gökhan Özdemir",
-      role: "PM, Scrum Master, Technical Support, Juniors' Guide, Aga",
+      role: "Senior Dev, PM, Scrum Master, Technical Support, Juniors' Guide, Aga",
       image: {
         src: "https://avatars.githubusercontent.com/u/8511119?v=4",
         alt: "Gökhan Özdemir",
@@ -49,7 +49,7 @@ const OurTeam = () => {
       <Header />
       <section className="flex flex-col items-center my-20">
         <h2> Meet Our Team </h2>
-        <div className="flex flex-col gap-20">
+        <div className="flex flex-col gap-20 mt-20">
           {teamData.map((member, index) => (
             <div key={index} className="flex flex-col items-center text-center">
               <img
@@ -58,7 +58,7 @@ const OurTeam = () => {
                 className="w-[150px] h-[150px] rounded-full"
               />
               <h3>{member.name}</h3>
-              <p className="max-w-[200px] font-medium">{member.role}</p>
+              <p className="max-w-[70%] font-medium">{member.role}</p>
             </div>
           ))}
         </div>
