@@ -1,18 +1,3 @@
-export const setCart = (cart) => ({
-    type: 'SET_CART',
-    payload: cart
-});
-
-export const setPayment = (payment) => ({
-    type: 'SET_PAYMENT',
-    payload: payment
-});
-
-export const setAddress = (address) => ({
-    type: 'SET_ADDRESS',
-    payload: address
-});
-
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const CLEAR_CART = 'CLEAR_CART';

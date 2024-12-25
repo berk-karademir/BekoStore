@@ -21,26 +21,42 @@ const SignUp = () => {
   } = useForm();
 
   const [selectedRole, setSelectedRole] = useState("");
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const history = useHistory();
-  
-  // Redux store'dan rolleri al
   const roles = useSelector(state => state.client.roles);
 
+  // İlk useEffect - rolleri yükle
   useEffect(() => {
-    dispatch(fetchRoles());
+    const loadRoles = async () => {
+      try {
+        setLoading(true);
+        await dispatch(fetchRoles());
+      } catch (error) {
+        console.error('Error loading roles:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRoles();
   }, [dispatch]);
 
-  // Roller yüklendiğinde varsayılan rolü ayarla
+  // İkinci useEffect - varsayılan rolü ayarla
   useEffect(() => {
-    if (roles.length > 0) {
+    if (roles && roles.length > 0 && !selectedRole) {
       const defaultRole = roles.find(role => role.code === "customer");
       if (defaultRole) {
         setValue("role_id", defaultRole.id);
         setSelectedRole(defaultRole.code);
       }
     }
-  }, [roles, setValue]);
+  }, [roles, setValue, selectedRole]);
+
+  // Loading durumunu render'dan önce kontrol et
+  if (loading) {
+    return <div>Yükleniyor...</div>;
+  }
 
   const onSubmit = async (data) => {
     const essentialData = {

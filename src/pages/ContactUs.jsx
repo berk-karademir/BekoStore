@@ -5,8 +5,10 @@ import React from "react";
 
 function ContactUs() {
   return (
-    <section className="flex flex-col items-center justify-center gap-10 text-[#252B42] ">
-      <Header />
+    <>
+    <Header/>
+    <section className="flex flex-col items-center justify-center gap-10 text-[#252B42] mt-20">
+      
       <div className="  text-center font-[600] px-10">
         <h3>CONTACT US</h3>
         <h2 className="my-10">Get in touch today!</h2>
@@ -59,6 +61,7 @@ function ContactUs() {
       </div>
       <Footer/>
     </section>
+    </>
   );
 }
 

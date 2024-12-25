@@ -4,6 +4,23 @@ import { useHistory } from "react-router-dom";
 import { User, LogOut } from "lucide-react";
 import { fetchRoles, logout } from "../store/actions/clientActions";
 import Header from "../layout/Header.jsx";
+import { verifyToken } from '../services/authService';
+
+// Thunk action creator
+const verifyAndSetUser = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    
+    const userData = await verifyToken();
+    dispatch({ type: 'SET_USER', payload: userData });
+  } catch (error) {
+    // Token yoksa veya geçersizse kullanıcıyı çıkış yaptır
+    dispatch({ type: 'CLEAR_USER' });
+  }
+};
 
 const Profile = () => {
   const user = useSelector((state) => state.client.user);
@@ -13,6 +30,10 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch(fetchRoles());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(verifyAndSetUser());
   }, [dispatch]);
 
   // If no user is logged in, redirect to login
