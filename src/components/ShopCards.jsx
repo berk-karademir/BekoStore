@@ -72,7 +72,6 @@ function ShopCards() {
         {currentProducts.map((product) => (
           <div key={product.id} className="bg-[#ECECEC] flex flex-col justify-between rounded-lg p-6 hover:shadow-lg transition-shadow">
             <div className="flex flex-col justify-center flex-grow">
-              <p className="text-[#737373] text-sm">{product.category || 'Uncategorized'}</p>
               <h3 className="text-[#252B42] text-xl font-bold mt-2">{product.name || 'Product Name'}</h3>
               <p className="text-[#252B42] font-semibold mt-2">
                 ${typeof product.price === 'number' ? product.price.toFixed(2) : '0.00'}
@@ -85,7 +84,7 @@ function ShopCards() {
               <img
                 src={product.images && product.images.length > 0 ? product.images[0].url : '/images/product-1.png'}
                 alt={product.name || 'Product'}
-                className="w-32 h-32 object-contain"
+                className=""
                 onError={(e) => {
                   e.target.src = '/images/product-1.png';
                   e.target.onerror = null;
