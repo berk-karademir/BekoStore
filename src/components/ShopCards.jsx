@@ -77,7 +77,7 @@ function ShopCards() {
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
-    toast.success("Ürün sepete eklendi!");
+    toast.success(`${product.description} sepete eklendi!`);
   };
 
   if (fetchState === "FETCHING")
