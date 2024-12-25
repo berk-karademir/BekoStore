@@ -23,27 +23,78 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
     phone: '',
     city: '',
     district: '',
-    neighborhood: ''
+    neighborhood: '',
+    address: ''
   });
+
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (editAddress) {
-      setFormData(editAddress);
+      setFormData({
+        ...editAddress,
+        address: editAddress.address || ''
+      });
     }
   }, [editAddress]);
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.title.trim()) {
+      newErrors.title = 'Adres başlığı gerekli';
+    }
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Ad gerekli';
+    }
+    
+    if (!formData.surname.trim()) {
+      newErrors.surname = 'Soyad gerekli';
+    }
+    
+    const phoneRegex = /^(05)[0-9][0-9][1-9]([0-9]){6}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      newErrors.phone = 'Geçerli bir telefon numarası giriniz (05XX XXX XX XX)';
+    }
+    
+    if (!formData.city) {
+      newErrors.city = 'İl seçimi gerekli';
+    }
+    
+    if (!formData.district.trim()) {
+      newErrors.district = 'İlçe gerekli';
+    }
+    
+    if (!formData.neighborhood.trim()) {
+      newErrors.neighborhood = 'Mahalle gerekli';
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = 'Detaylı adres gerekli';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const payload = {
         title: formData.title,
         name: formData.name,
         surname: formData.surname,
-        phone: formData.phone,
+        phone: formData.phone.replace(/\s/g, ''),
         city: formData.city.toLowerCase(),
         district: formData.district,
-        neighborhood: formData.neighborhood
+        neighborhood: formData.neighborhood,
+        address: formData.address
       };
 
       if (editAddress) {
@@ -63,6 +114,18 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
       console.error('Address save error:', error);
       toast.error(error.response?.data?.message || 'Bir hata oluştu');
     }
+  };
+
+  const formatPhoneNumber = (value) => {
+    const cleaned = value.replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
+    if (match) {
+      return match
+        .slice(1)
+        .filter(Boolean)
+        .join(' ');
+    }
+    return cleaned;
   };
 
   return (
@@ -86,10 +149,10 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg"
+              className={`w-full px-3 py-2 border rounded-lg ${errors.title ? 'border-red-500' : ''}`}
               placeholder="örn: Ev adresi"
-              required
             />
+            {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -101,9 +164,9 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg"
-                required
+                className={`w-full px-3 py-2 border rounded-lg ${errors.name ? 'border-red-500' : ''}`}
               />
+              {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
 
             <div>
@@ -114,9 +177,9 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
                 type="text"
                 value={formData.surname}
                 onChange={(e) => setFormData({...formData, surname: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg"
-                required
+                className={`w-full px-3 py-2 border rounded-lg ${errors.surname ? 'border-red-500' : ''}`}
               />
+              {errors.surname && <p className="text-red-500 text-sm mt-1">{errors.surname}</p>}
             </div>
           </div>
 
@@ -127,11 +190,11 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
             <input
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData({...formData, phone: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg"
+              onChange={(e) => setFormData({...formData, phone: formatPhoneNumber(e.target.value)})}
+              className={`w-full px-3 py-2 border rounded-lg ${errors.phone ? 'border-red-500' : ''}`}
               placeholder="05XX XXX XX XX"
-              required
             />
+            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -142,8 +205,7 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
               <select
                 value={formData.city}
                 onChange={(e) => setFormData({...formData, city: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg"
-                required
+                className={`w-full px-3 py-2 border rounded-lg ${errors.city ? 'border-red-500' : ''}`}
               >
                 <option value="">İl Seçiniz</option>
                 {cities.map(city => (
@@ -152,6 +214,7 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
                   </option>
                 ))}
               </select>
+              {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
             </div>
 
             <div>
@@ -162,9 +225,9 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
                 type="text"
                 value={formData.district}
                 onChange={(e) => setFormData({...formData, district: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg"
-                required
+                className={`w-full px-3 py-2 border rounded-lg ${errors.district ? 'border-red-500' : ''}`}
               />
+              {errors.district && <p className="text-red-500 text-sm mt-1">{errors.district}</p>}
             </div>
           </div>
 
@@ -176,9 +239,23 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
               type="text"
               value={formData.neighborhood}
               onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg"
-              required
+              className={`w-full px-3 py-2 border rounded-lg ${errors.neighborhood ? 'border-red-500' : ''}`}
             />
+            {errors.neighborhood && <p className="text-red-500 text-sm mt-1">{errors.neighborhood}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Detaylı Adres
+            </label>
+            <textarea
+              value={formData.address}
+              onChange={(e) => setFormData({...formData, address: e.target.value})}
+              className={`w-full px-3 py-2 border rounded-lg ${errors.address ? 'border-red-500' : ''}`}
+              rows="3"
+              placeholder="Sokak, bina ve kapı numarası gibi detayları giriniz"
+            />
+            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
