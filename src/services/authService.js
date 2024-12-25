@@ -51,13 +51,56 @@ export const fetchRoles = async () => {
 
 export const fetchProducts = async () => {
   try {
-    const response = await authApi.get('/products');
-    if (!response.data.products) {
-      throw new Error('Ürün verisi bulunamadı');
-    }
-    return response.data.products;
+    const [
+      allProductsResponse,
+      category1Response,
+      category2Response,
+      category3Response
+    ] = await Promise.all([
+      authApi.get('/products'),
+      authApi.get('/products?category=1'),
+      authApi.get('/products?category=2'),
+      authApi.get('/products?category=3')
+    ]);
+
+    const allProducts = allProductsResponse.data.products || [];
+    const category1Products = category1Response.data.products || [];
+    const category2Products = category2Response.data.products || [];
+    const category3Products = category3Response.data.products || [];
+
+    // URL'leri saklayacağımız Set oluşturalım
+    const seenUrls = new Set();
+    const uniqueProducts = [];
+
+    // Tüm ürün listelerini birleştirelim
+    const allProductLists = [
+      ...allProducts,
+      ...category1Products,
+      ...category2Products,
+      ...category3Products
+    ];
+
+    // Her ürünü kontrol edelim
+    allProductLists.forEach(product => {
+      // Ürünün image URL'ini alalım
+      const imageUrl = product.images?.[0]?.url;
+      
+      // URL kontrolü yapalım
+      if (imageUrl && !seenUrls.has(imageUrl)) {
+        // Yeni URL'i Set'e ekleyelim
+        seenUrls.add(imageUrl);
+        // Ürünü benzersiz listeye ekleyelim
+        uniqueProducts.push(product);
+      }
+    });
+
+    console.log('Görülen URL sayısı:', seenUrls.size);
+    console.log('Benzersiz ürün sayısı:', uniqueProducts.length);
+    
+    return uniqueProducts;
+
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error('Ürünler yüklenirken hata:', error);
     throw new Error('Ürünler yüklenirken bir hata oluştu');
   }
 };

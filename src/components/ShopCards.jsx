@@ -8,6 +8,9 @@ import {
   setOffset,
   setTotal,
 } from "../store/actions/productActions";
+import { addToCart } from "../store/actions/shoppingCartActions";
+import { Button } from "./ui/button";
+import { toast } from "react-toastify";
 
 function ShopCards() {
   const dispatch = useDispatch();
@@ -70,6 +73,11 @@ function ShopCards() {
   const handlePageClick = (page) => {
     dispatch(setOffset((page - 1) * limit));
     scrollToProducts();
+  };
+
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product));
+    toast.success("Ürün sepete eklendi!");
   };
 
   if (fetchState === "FETCHING")
@@ -137,13 +145,16 @@ function ShopCards() {
                 }}
               />
             </div>
+            <Button onClick={() => handleAddToCart(product)}>Add to Cart</Button>
           </div>
+          
         ))}
+        
       </div>
 
       {/* Refactored Pagination with clickable page numbers */}
       <div className="flex justify-center items-center gap-4 mt-8">
-      <button
+        <button
           onClick={handleFirstPage}
           disabled={offset === 0}
           className={`px-4 py-2 rounded-full ${
@@ -165,9 +176,10 @@ function ShopCards() {
         >
           Previous
         </button>
-      <p className="text-center leading-4">
-        <span className="font-bold">{currentPage}</span> of{" "} <span className="font-bold">{totalPages}</span>
-      </p>
+        <p className="text-center leading-4">
+          <span className="font-bold">{currentPage}</span> of{" "}
+          <span className="font-bold">{totalPages}</span>
+        </p>
         <button
           onClick={handleNextPage}
           disabled={offset + limit >= total}
@@ -194,10 +206,7 @@ function ShopCards() {
       <div className="flex justify-center items-center gap-2 mt-4">
         {Array.from({ length: totalPages }, (_, index) => {
           const pageNumber = index + 1;
-          if (
-            pageNumber >= currentPage - 4 &&
-            pageNumber <= currentPage + 4
-          ) {
+          if (pageNumber >= currentPage - 4 && pageNumber <= currentPage + 4) {
             return (
               <button
                 key={pageNumber}
@@ -209,14 +218,12 @@ function ShopCards() {
                 } transition-colors`}
               >
                 {pageNumber}
-                
               </button>
             );
           }
           return null;
         })}
       </div>
-      
     </section>
   );
 }
