@@ -51,11 +51,24 @@ export const fetchRoles = async () => {
 
 export const fetchProducts = async () => {
   try {
-    const response = await authApi.get('/products');
-    console.log('Products Response:', response.data); 
-    return response.data.products; 
+    const endpoints = [
+      '/products',
+      '/products?category=1',
+      '/products?category=2',
+      '/products?category=3'
+    ];
+
+    // Perform all GET requests in parallel
+    const responses = await Promise.all(endpoints.map(endpoint => authApi.get(endpoint)));
+
+    // Extract and combine the product data from all responses
+    const allProducts = responses.flatMap(response => response.data.products);
+
+    console.log('Combined Products:', allProducts);
+    return allProducts;
   } catch (error) {
-    console.error('Error fetching products:', error); 
+    console.error('Error fetching products:', error);
     throw error.response?.data || error.message;
   }
 };
+
