@@ -85,6 +85,17 @@ function ShopCards() {
   const totalPages = Math.ceil(total / limit);
   const currentPage = Math.floor(offset / limit) + 1;
 
+  const handleFirstPage = () => {
+    dispatch(setOffset(0));
+    scrollToProducts();
+  };
+
+  const handleLastPage = () => {
+    const lastPageOffset = (totalPages - 1) * limit;
+    dispatch(setOffset(lastPageOffset));
+    scrollToProducts();
+  };
+
   return (
     <section className="p-10 bg-[#FAFAFA]">
       <h3 className="text-2xl font-bold text-center mb-6">ALL PRODUCTS</h3>
@@ -132,6 +143,17 @@ function ShopCards() {
 
       {/* Refactored Pagination with clickable page numbers */}
       <div className="flex justify-center items-center gap-4 mt-8">
+      <button
+          onClick={handleFirstPage}
+          disabled={offset === 0}
+          className={`px-4 py-2 rounded-full ${
+            offset === 0
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600"
+          } text-white transition-colors`}
+        >
+          First
+        </button>
         <button
           onClick={handlePrevPage}
           disabled={offset === 0}
@@ -143,9 +165,9 @@ function ShopCards() {
         >
           Previous
         </button>
-        <span className="text-sm font-medium">
-          Page {currentPage} of {totalPages}
-        </span>
+      <p className="text-center leading-4">
+        <span className="font-bold">{currentPage}</span> of{" "} <span className="font-bold">{totalPages}</span>
+      </p>
         <button
           onClick={handleNextPage}
           disabled={offset + limit >= total}
@@ -156,6 +178,17 @@ function ShopCards() {
           } text-white transition-colors`}
         >
           Next
+        </button>
+        <button
+          onClick={handleLastPage}
+          disabled={offset + limit >= total}
+          className={`px-4 py-2 rounded-full ${
+            offset + limit >= total
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600"
+          } text-white transition-colors`}
+        >
+          Last
         </button>
       </div>
       <div className="flex justify-center items-center gap-2 mt-4">
@@ -176,12 +209,14 @@ function ShopCards() {
                 } transition-colors`}
               >
                 {pageNumber}
+                
               </button>
             );
           }
           return null;
         })}
       </div>
+      
     </section>
   );
 }
