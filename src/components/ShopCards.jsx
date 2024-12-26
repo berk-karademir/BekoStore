@@ -2,160 +2,180 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../services/authService";
 import {
-  setProductList,
-  setFetchState,
   setLimit,
-  setOffset,
-  setTotal,
+  fetchProductsAction,
+  sortProducts,
+  handlePagination
 } from "../store/actions/productActions";
 import { addToCart } from "../store/actions/shoppingCartActions";
 import { Button } from "./ui/button";
 import { toast } from "react-toastify";
 
+const ITEMS_PER_PAGE = 4;
+
+const SORT_OPTIONS = [
+  { value: "price-asc", label: "Price: Ascending" },
+  { value: "price-desc", label: "Price: Descending" },
+  { value: "rating-asc", label: "Rating: Ascending" },
+  { value: "rating-desc", label: "Rating: Descending" }
+];
+
 function ShopCards() {
   const dispatch = useDispatch();
-  const { productList, fetchState, limit, offset, total } = useSelector(
+  const { productList, fetchState, limit, offset, total, sortOption } = useSelector(
     (state) => state.product
   );
   const productsRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
+  // Sayfa başına gösterilecek ürün sayısını ayarla
   useEffect(() => {
-    dispatch(setLimit(4));
+    dispatch(setLimit(ITEMS_PER_PAGE));
   }, [dispatch]);
 
+  // İlk yüklemede ürünleri getir
   useEffect(() => {
-    const getProducts = async () => {
-      dispatch(setFetchState("FETCHING"));
-      try {
-        const data = await fetchProducts();
-        console.log("Fetched Products:", data);
-        if (Array.isArray(data)) {
-          dispatch(setProductList(data));
-          dispatch(setTotal(data.length));
-          dispatch(setFetchState("FETCHED"));
-        } else {
-          dispatch(setFetchState("ERROR"));
-        }
-      } catch (err) {
-        console.error("Error in component:", err);
-        dispatch(setFetchState("ERROR"));
-      }
-    };
-
     if (fetchState === "NOT_FETCHED") {
-      getProducts();
+      dispatch(fetchProductsAction());
     }
   }, [dispatch, fetchState]);
 
+  // Dropdown dışına tıklandığında kapat
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Yardımcı fonksiyonlar
   const scrollToProducts = () => {
-    if (productsRef.current) {
-      productsRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
+    productsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const handlePrevPage = () => {
-    if (offset > 0) {
-      dispatch(setOffset(offset - limit));
-      scrollToProducts();
-    }
+  // Event handler'lar
+  const handleSort = (option) => {
+    setIsDropdownOpen(false);
+    dispatch(sortProducts(option));
   };
 
-  const handleNextPage = () => {
-    if (offset + limit < total) {
-      dispatch(setOffset(offset + limit));
-      scrollToProducts();
-    }
-  };
-
-  const handlePageClick = (page) => {
-    dispatch(setOffset((page - 1) * limit));
+  const handlePageChange = (newOffset) => {
+    dispatch(handlePagination(newOffset));
     scrollToProducts();
   };
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
-    toast.success(`${product.description} sepete eklendi!`);
+    toast.success(`${product.name} sepete eklendi!`);
   };
 
-  if (fetchState === "FETCHING")
-    return <div className="text-center p-4">Loading...</div>;
-  if (fetchState === "ERROR")
-    return (
-      <div className="text-center p-4 text-red-500">Error loading products</div>
-    );
-  if (!productList.length)
-    return <div className="text-center p-4">No products found</div>;
+  // Yükleme ve hata durumları
+  if (fetchState === "FETCHING") {
+    return <div className="text-center p-4">Loading products...</div>;
+  }
 
+  if (fetchState === "ERROR") {
+    return <div className="text-center p-4 text-red-500">Error loading products!</div>;
+  }
+
+  if (!productList.length) {
+    return <div className="text-center p-4">No products found.</div>;
+  }
+
+  // Sayfalama hesaplamaları
   const currentProducts = productList.slice(offset, offset + limit);
   const totalPages = Math.ceil(total / limit);
   const currentPage = Math.floor(offset / limit) + 1;
 
-  const handleFirstPage = () => {
-    dispatch(setOffset(0));
-    scrollToProducts();
-  };
-
-  const handleLastPage = () => {
-    const lastPageOffset = (totalPages - 1) * limit;
-    dispatch(setOffset(lastPageOffset));
-    scrollToProducts();
+  // Dropdown menü başlığı
+  const getDropdownTitle = () => {
+    if (sortOption === "none") return "Sort by...";
+    const selectedOption = SORT_OPTIONS.find(opt => opt.value === sortOption);
+    return selectedOption?.label || "Sort by...";
   };
 
   return (
     <section className="p-10 bg-[#FAFAFA]">
-      <h3 className="text-2xl font-bold text-center mb-6">ALL PRODUCTS</h3>
-      <div ref={productsRef} className="space-y-6">
+      {/* Header ve Sıralama */}
+      <div className="flex flex-col justify-between items-center">
+        <h3 className="text-2xl font-bold">ALL PRODUCTS</h3>
+        
+        {/* Sort Dropdown */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="px-4 py-2 bg-white border rounded-lg shadow-sm hover:bg-gray-50 flex items-center gap-2"
+          >
+            <span className="text-gray-700">{getDropdownTitle()}</span>
+            <svg
+              className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 py-1">
+              {SORT_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => handleSort(option.value)}
+                  className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
+                    sortOption === option.value ? "bg-blue-50 text-blue-600" : "text-gray-700"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Ürün Grid'i */}
+      <div ref={productsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {currentProducts.map((product) => (
           <div
             key={product.id}
-            className="bg-[#ECECEC] flex flex-col justify-between rounded-lg p-6 hover:shadow-lg transition-shadow"
+            className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
           >
-            <div className="flex flex-col justify-center flex-grow">
-              <h3 className="text-[#252B42] text-lg font-bold mt-2">
-                {product.name || "Product Name"} ({product.rating}⭐)
-              </h3>
-              <p className="text-[#252B42] font-semibold mt-2">
-                $
-                {typeof product.price === "number"
-                  ? product.price.toFixed(2)
-                  : "0.00"}{" "}
-                <i className="text-gray-500 text-sm">
-                  ({product.stock} in stock)
-                </i>
-              </p>
-              <p className="text-gray-500 text-sm mt-2 max-w-[400px]">
-                {product.description || "No description available"}
-              </p>
-            </div>
-            <div className="flex items-center mt-4">
-              <img
-                src={
-                  product.images && product.images.length > 0
-                    ? product.images[0].url
-                    : "/images/product-1.png"
-                }
-                alt={product.name || "Product"}
-                className=""
-                onError={(e) => {
-                  e.target.src = "/images/product-1.png";
-                  e.target.onerror = null;
-                }}
-              />
-            </div>
-            <Button onClick={() => handleAddToCart(product)}>Add to Cart</Button>
+            <img
+              src={product.images?.[0]?.url || "/images/product-1.png"}
+              alt={product.name}
+              className="w-full h-48 object-cover rounded-lg mb-4"
+              onError={(e) => {
+                e.target.src = "/images/product-1.png";
+                e.target.onerror = null;
+              }}
+            />
+            <h3 className="text-lg font-semibold mb-2">
+              {product.name} ({product.rating}⭐)
+            </h3>
+            <p className="text-gray-600 mb-2">
+              ${product.price.toFixed(2)}
+              <span className="text-sm ml-2">({product.stock} in stock)</span>
+            </p>
+            <p className="text-gray-500 text-sm mb-4 line-clamp-2">
+              {product.description}
+            </p>
+            <Button onClick={() => handleAddToCart(product)} className="w-full">
+              Add to Cart
+            </Button>
           </div>
-          
         ))}
-        
       </div>
 
-      {/* Refactored Pagination with clickable page numbers */}
+      {/* Sayfalama */}
       <div className="flex justify-center items-center gap-4 mt-8">
         <button
-          onClick={handleFirstPage}
+          onClick={() => handlePageChange(0)}
           disabled={offset === 0}
           className={`px-4 py-2 rounded-full ${
             offset === 0
@@ -166,7 +186,7 @@ function ShopCards() {
           First
         </button>
         <button
-          onClick={handlePrevPage}
+          onClick={() => handlePageChange(Math.max(0, offset - limit))}
           disabled={offset === 0}
           className={`px-4 py-2 rounded-full ${
             offset === 0
@@ -176,12 +196,11 @@ function ShopCards() {
         >
           Previous
         </button>
-        <p className="text-center leading-4">
-          <span className="font-bold">{currentPage}</span> of{" "}
-          <span className="font-bold">{totalPages}</span>
-        </p>
+        <span className="text-gray-700">
+          Page {currentPage} / {totalPages}
+        </span>
         <button
-          onClick={handleNextPage}
+          onClick={() => handlePageChange(offset + limit)}
           disabled={offset + limit >= total}
           className={`px-4 py-2 rounded-full ${
             offset + limit >= total
@@ -192,7 +211,7 @@ function ShopCards() {
           Next
         </button>
         <button
-          onClick={handleLastPage}
+          onClick={() => handlePageChange((totalPages - 1) * limit)}
           disabled={offset + limit >= total}
           className={`px-4 py-2 rounded-full ${
             offset + limit >= total
@@ -202,27 +221,6 @@ function ShopCards() {
         >
           Last
         </button>
-      </div>
-      <div className="flex justify-center items-center gap-2 mt-4">
-        {Array.from({ length: totalPages }, (_, index) => {
-          const pageNumber = index + 1;
-          if (pageNumber >= currentPage - 4 && pageNumber <= currentPage + 4) {
-            return (
-              <button
-                key={pageNumber}
-                onClick={() => handlePageClick(pageNumber)}
-                className={`px-3 py-1 rounded-full ${
-                  currentPage === pageNumber
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 hover:bg-gray-300"
-                } transition-colors`}
-              >
-                {pageNumber}
-              </button>
-            );
-          }
-          return null;
-        })}
       </div>
     </section>
   );

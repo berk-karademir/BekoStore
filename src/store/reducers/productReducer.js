@@ -3,7 +3,8 @@ import {
   SET_FETCH_STATE,
   SET_LIMIT,
   SET_OFFSET,
-  SET_TOTAL
+  SET_TOTAL,
+  SET_SORT_OPTION
 } from '../actions/productActions';
 
 const initialState = {
@@ -11,7 +12,8 @@ const initialState = {
   fetchState: 'NOT_FETCHED', // NOT_FETCHED, FETCHING, FETCHED, ERROR
   limit: 4,
   offset: 0,
-  total: 0
+  total: 0,
+  sortOption: 'none'
 };
 
 const productReducer = (state = initialState, action) => {
@@ -40,6 +42,11 @@ const productReducer = (state = initialState, action) => {
       return {
         ...state,
         total: action.payload
+      };
+    case SET_SORT_OPTION:
+      return {
+        ...state,
+        sortOption: action.payload
       };
     default:
       return state;

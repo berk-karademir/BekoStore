@@ -5,6 +5,7 @@ import { CreditCard, Info, Loader } from 'lucide-react';
 import AddressForm from '../components/AddressForm';
 import axiosInstance from '../services/axiosInstance';
 import { useSelector } from 'react-redux';
+import Header from '@/layout/Header';
 
 // Kart numarası validasyonu
 const validateCardNumber = (number) => {
@@ -27,8 +28,11 @@ const validateExpiry = (month, year) => {
 
 function CheckoutPage() {
   const shoppingCart = useSelector((state) => state.shoppingCart);
-  const cartItems = shoppingCart?.cartItems || [];
-  const calculateTotal = shoppingCart?.calculateTotal || (() => 0);
+  const cartItems = shoppingCart?.items || [];
+  
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
   
   const history = useHistory();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('credit-card');
@@ -330,6 +334,8 @@ function CheckoutPage() {
   );
 
   return (
+    <>
+    <Header/>
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -517,6 +523,7 @@ function CheckoutPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
