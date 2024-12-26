@@ -11,6 +11,10 @@ export const SET_EDIT_ADDRESS = 'SET_EDIT_ADDRESS';
 export const SET_LOADING = 'SET_LOADING';
 export const SET_ERRORS = 'SET_ERRORS';
 export const RESET_CHECKOUT = 'RESET_CHECKOUT';
+export const SET_SAVED_CARDS = 'SET_SAVED_CARDS';
+export const SET_SELECTED_CARD = 'SET_SELECTED_CARD';
+export const SET_SHOW_CARD_FORM = 'SET_SHOW_CARD_FORM';
+export const SET_EDIT_CARD = 'SET_EDIT_CARD';
 
 // Validation Functions
 const validateCardNumber = (number) => {
@@ -73,6 +77,147 @@ export const setErrors = (errors) => ({
 export const resetCheckout = () => ({
   type: RESET_CHECKOUT
 });
+
+// Card Related Action Creators
+export const setSavedCards = (cards) => ({
+  type: SET_SAVED_CARDS,
+  payload: cards
+});
+
+export const setSelectedCard = (card) => ({
+  type: SET_SELECTED_CARD,
+  payload: card
+});
+
+export const setShowCardForm = (show) => ({
+  type: SET_SHOW_CARD_FORM,
+  payload: show
+});
+
+export const setEditCard = (card) => ({
+  type: SET_EDIT_CARD,
+  payload: card
+});
+
+// Card Related Thunk Actions
+export const fetchSavedCards = () => async (dispatch) => {
+  try {
+    dispatch(setLoading({ cards: true }));
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token bulunamadı');
+    }
+
+    const response = await axiosInstance.get('/user/card', {
+      headers: { Authorization: token }
+    });
+
+    const cardList = Array.isArray(response.data) ? response.data : [];
+    dispatch(setSavedCards(cardList));
+    
+    if (cardList.length > 0) {
+      dispatch(setSelectedCard(cardList[0]));
+    }
+  } catch (error) {
+    console.error('Error fetching cards:', error);
+    if (error.response?.status === 401) {
+      toast.error('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.');
+      localStorage.removeItem('token');
+    } else {
+      toast.error('Kartlar yüklenirken bir hata oluştu');
+    }
+    dispatch(setSavedCards([]));
+  } finally {
+    dispatch(setLoading({ cards: false }));
+  }
+};
+
+export const saveCard = (cardData) => async (dispatch) => {
+  try {
+    dispatch(setLoading({ saveCard: true }));
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token bulunamadı');
+    }
+
+    await axiosInstance.post('/user/card', cardData, {
+      headers: { Authorization: token }
+    });
+    
+    toast.success('Kart başarıyla kaydedildi');
+    dispatch(fetchSavedCards());
+    dispatch(setShowCardForm(false));
+  } catch (error) {
+    if (error.response?.status === 401) {
+      toast.error('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.');
+      localStorage.removeItem('token');
+    } else {
+      toast.error('Kart kaydedilirken bir hata oluştu');
+    }
+  } finally {
+    dispatch(setLoading({ saveCard: false }));
+  }
+};
+
+export const updateCard = (cardData) => async (dispatch) => {
+  try {
+    dispatch(setLoading({ updateCard: true }));
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token bulunamadı');
+    }
+
+    await axiosInstance.put('/user/card', cardData, {
+      headers: { Authorization: token }
+    });
+    
+    toast.success('Kart başarıyla güncellendi');
+    dispatch(fetchSavedCards());
+    dispatch(setEditCard(null));
+    dispatch(setShowCardForm(false));
+  } catch (error) {
+    if (error.response?.status === 401) {
+      toast.error('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.');
+      localStorage.removeItem('token');
+    } else {
+      toast.error('Kart güncellenirken bir hata oluştu');
+    }
+  } finally {
+    dispatch(setLoading({ updateCard: false }));
+  }
+};
+
+export const deleteCard = (cardId) => async (dispatch) => {
+  if (window.confirm('Bu kartı silmek istediğinizden emin misiniz?')) {
+    try {
+      dispatch(setLoading({ deleteCard: true }));
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token bulunamadı');
+      }
+
+      await axiosInstance.delete(`/user/card/${cardId}`, {
+        headers: { Authorization: token }
+      });
+      
+      toast.success('Kart başarıyla silindi');
+      dispatch(fetchSavedCards());
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.');
+        localStorage.removeItem('token');
+      } else {
+        toast.error('Kart silinirken bir hata oluştu');
+      }
+    } finally {
+      dispatch(setLoading({ deleteCard: false }));
+    }
+  }
+};
 
 // Thunk Actions
 export const fetchAddresses = () => async (dispatch) => {

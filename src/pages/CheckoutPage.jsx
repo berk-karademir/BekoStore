@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import Header from '@/layout/Header';
 import AddressSection from '../components/checkout/AddressSection';
 import PaymentSection from '../components/checkout/PaymentSection';
+import CardSection from '../components/checkout/CardSection';
 import OrderSummary from '../components/checkout/OrderSummary';
 import {
   setCardInfo,
@@ -27,6 +28,7 @@ function CheckoutPage() {
     addresses,
     selectedAddress,
     editAddress,
+    selectedCard,
     isLoading,
     errors
   } = useSelector((state) => state.checkout);
@@ -60,7 +62,7 @@ function CheckoutPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(submitPayment({ cardInfo, selectedAddress, acceptTerms }, cartItems, calculateTotal))
+    dispatch(submitPayment({ cardInfo, selectedAddress, selectedCard, acceptTerms }, cartItems, calculateTotal))
       .then((response) => {
         if (response) {
           history.push('/order-success', { orderId: response.orderId });
@@ -92,6 +94,8 @@ function CheckoutPage() {
                 errors={errors}
               />
 
+              <CardSection />
+
               <PaymentSection 
                 cardInfo={cardInfo}
                 setCardInfo={(info) => dispatch(setCardInfo(info))}
@@ -99,6 +103,7 @@ function CheckoutPage() {
                 setAcceptTerms={(accept) => dispatch(setAcceptTerms(accept))}
                 errors={errors}
                 formatCardNumber={formatCardNumber}
+                selectedCard={selectedCard}
               />
             </div>
 

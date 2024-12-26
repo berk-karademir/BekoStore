@@ -7,7 +7,11 @@ import {
   SET_EDIT_ADDRESS,
   SET_LOADING,
   SET_ERRORS,
-  RESET_CHECKOUT
+  RESET_CHECKOUT,
+  SET_SAVED_CARDS,
+  SET_SELECTED_CARD,
+  SET_SHOW_CARD_FORM,
+  SET_EDIT_CARD
 } from '../actions/checkoutActions';
 
 const initialState = {
@@ -23,10 +27,18 @@ const initialState = {
   addresses: [],
   selectedAddress: null,
   editAddress: null,
+  savedCards: [],
+  selectedCard: null,
+  showCardForm: false,
+  editCard: null,
   isLoading: {
     addresses: false,
     payment: false,
-    deleteAddress: false
+    deleteAddress: false,
+    cards: false,
+    saveCard: false,
+    updateCard: false,
+    deleteCard: false
   },
   errors: {}
 };
@@ -70,6 +82,30 @@ const checkoutReducer = (state = initialState, action) => {
       return {
         ...state,
         editAddress: action.payload
+      };
+
+    case SET_SAVED_CARDS:
+      return {
+        ...state,
+        savedCards: action.payload
+      };
+
+    case SET_SELECTED_CARD:
+      return {
+        ...state,
+        selectedCard: action.payload
+      };
+
+    case SET_SHOW_CARD_FORM:
+      return {
+        ...state,
+        showCardForm: action.payload
+      };
+
+    case SET_EDIT_CARD:
+      return {
+        ...state,
+        editCard: action.payload
       };
 
     case SET_LOADING:
