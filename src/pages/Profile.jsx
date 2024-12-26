@@ -5,6 +5,7 @@ import { User, LogOut } from "lucide-react";
 import { fetchRoles, logout } from "../store/actions/clientActions";
 import Header from "../layout/Header.jsx";
 import { verifyToken } from '../services/authService';
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 // Thunk action creator
 const verifyAndSetUser = () => async (dispatch) => {
@@ -84,6 +85,15 @@ const Profile = () => {
               <p className="text-sm font-medium text-gray-500">Role</p>
               <p className="text-lg text-gray-800 capitalize">{getUserRole()}</p>
             </div>
+            <div className="border-b pb-4">
+            <Link to="/orders">
+            <p className="text-sm font-medium text-gray-500">Your Orders</p>
+                <p className="text-lg text-gray-800 ">Click to view your all orders</p>
+              </Link>
+            </div>
+            
+              
+            
             {user.store && (
               <>
                 <div className="border-b pb-4">
@@ -102,6 +112,7 @@ const Profile = () => {
                   <p className="text-sm font-medium text-gray-500">Bank Account</p>
                   <p className="text-lg text-gray-800">{user.store.bank_account}</p>
                 </div>
+                
               </>
             )}
           </div>

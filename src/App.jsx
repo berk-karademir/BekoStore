@@ -17,6 +17,7 @@ import { setUser } from './store/actions/userActions';
 import { useDispatch } from 'react-redux';
 import axiosInstance from './services/axiosInstance';
 import OrderSuccessPage from './pages/OrderSuccessPage';
+import OrderHistory from "./pages/OrderHistory";
 function App() {
   const dispatch = useDispatch();
 
@@ -62,6 +63,7 @@ function App() {
         <Route path="/cart" component={CartPage} />
         <Route path="/checkout" component={CheckoutPage} />
         <Route path="/order-success" component={OrderSuccessPage} />
+        <Route path="/orders" component={OrderHistory} />
       </Switch>
     </>
   );
