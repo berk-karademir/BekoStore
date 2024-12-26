@@ -19,6 +19,27 @@ function PaymentSection({
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
+                Kart Üzerindeki İsim
+              </label>
+              <input
+                type="text"
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+                  errors.cardName ? 'border-red-500' : ''
+                }`}
+                placeholder="Ad Soyad"
+                value={cardInfo.cardName || ''}
+                onChange={(e) => setCardInfo({
+                  ...cardInfo,
+                  cardName: e.target.value
+                })}
+              />
+              {errors.cardName && (
+                <p className="text-red-500 text-sm mt-1">{errors.cardName}</p>
+              )}
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Kart Numarası
               </label>
               <input

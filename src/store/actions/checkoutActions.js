@@ -33,6 +33,10 @@ const validateExpiry = (month, year) => {
   return expiry > today;
 };
 
+const validateCardName = (name) => {
+  return name && name.trim().length >= 3;
+};
+
 // Action Creators
 export const setCardInfo = (cardInfo) => ({
   type: SET_CARD_INFO,
@@ -283,27 +287,33 @@ export const deleteAddress = (addressId) => async (dispatch) => {
 };
 
 export const validateCheckoutForm = (checkoutState) => (dispatch) => {
-  const { cardInfo, selectedAddress, acceptTerms } = checkoutState;
+  const { cardInfo, selectedAddress, selectedCard, acceptTerms } = checkoutState;
   const newErrors = {};
 
   if (!selectedAddress) {
-    newErrors.address = 'Please select a delivery address';
+    newErrors.address = 'Lütfen bir teslimat adresi seçin';
   }
 
-  if (!validateCardNumber(cardInfo.cardNumber)) {
-    newErrors.cardNumber = 'Invalid card number';
-  }
+  if (!selectedCard) {
+    if (!validateCardName(cardInfo.cardName)) {
+      newErrors.cardName = 'Geçerli bir kart sahibi adı girin';
+    }
 
-  if (!validateCVV(cardInfo.cvv)) {
-    newErrors.cvv = 'Invalid CVV';
-  }
+    if (!validateCardNumber(cardInfo.cardNumber)) {
+      newErrors.cardNumber = 'Geçersiz kart numarası';
+    }
 
-  if (!validateExpiry(cardInfo.expiryMonth, cardInfo.expiryYear)) {
-    newErrors.expiry = 'Invalid expiry date';
+    if (!validateCVV(cardInfo.cvv)) {
+      newErrors.cvv = 'Geçersiz CVV';
+    }
+
+    if (!validateExpiry(cardInfo.expiryMonth, cardInfo.expiryYear)) {
+      newErrors.expiry = 'Geçersiz son kullanma tarihi';
+    }
   }
 
   if (!acceptTerms) {
-    newErrors.terms = 'Please accept the terms and conditions';
+    newErrors.terms = 'Lütfen şartları ve koşulları kabul edin';
   }
 
   dispatch(setErrors(newErrors));
@@ -315,41 +325,41 @@ export const submitPayment = (checkoutState, cartItems, calculateTotal) => async
     return;
   }
 
-  const { cardInfo, selectedAddress } = checkoutState;
+  const { cardInfo, selectedAddress, selectedCard } = checkoutState;
 
   try {
     dispatch(setLoading({ payment: true }));
     
     const paymentData = {
-      addressId: selectedAddress.id,
-      cardInfo: {
-        number: cardInfo.cardNumber.replace(/\s/g, ''),
-        expMonth: cardInfo.expiryMonth,
-        expYear: cardInfo.expiryYear,
-        cvv: cardInfo.cvv
-      },
-      items: cartItems.map(item => ({
-        productId: item.id,
-        quantity: item.quantity
-      })),
-      use3DSecure: cardInfo.use3DSecure,
-      totalAmount: calculateTotal() + 29.99
+      address_id: selectedAddress.id,
+      order_date: new Date().toISOString(),
+      card_no: selectedCard ? parseInt(selectedCard.card_no) : parseInt(cardInfo.cardNumber.replace(/\s/g, '')),
+      card_name: selectedCard ? selectedCard.name_on_card : cardInfo.cardName,
+      card_expire_month: selectedCard ? selectedCard.expire_month : parseInt(cardInfo.expiryMonth),
+      card_expire_year: selectedCard ? selectedCard.expire_year : parseInt(cardInfo.expiryYear),
+      card_ccv: parseInt(cardInfo.cvv),
+      price: calculateTotal() + 29.99,
+      products: cartItems.map(item => ({
+        product_id: item.id,
+        count: item.quantity,
+        detail: item.selectedVariant ? `${item.selectedVariant.color} - ${item.selectedVariant.size}` : ''
+      }))
     };
 
-    const response = await axiosInstance.post('/order', paymentData);
-    
-    if (response.data.requires3D) {
-      const secure3DResponse = await axiosInstance.post('/order', {
-        paymentId: response.data.paymentId
-      });
-      window.location.href = secure3DResponse.data.redirectUrl;
-    } else {
-      toast.success('Payment completed successfully!');
-      dispatch(resetCheckout());
-      return response.data;
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token bulunamadı');
     }
+
+    const response = await axiosInstance.post('/order', paymentData, {
+      headers: { Authorization: token }
+    });
+
+    toast.success('Sipariş başarıyla oluşturuldu!');
+    dispatch(resetCheckout());
+    return response.data;
   } catch (error) {
-    const errorMessage = error.response?.data?.message || 'An error occurred during payment';
+    const errorMessage = error.response?.data?.message || 'Sipariş oluşturulurken bir hata oluştu';
     toast.error(errorMessage);
     
     if (error.response?.status === 401) {
