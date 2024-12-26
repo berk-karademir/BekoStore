@@ -47,6 +47,7 @@ function ShopCards() {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const params = {
+      offset: searchParams.get("offset") || 0,
       category: categoryId,
       sort: searchParams.get("sort"),
       filter: searchParams.get("filter")
@@ -97,8 +98,12 @@ function ShopCards() {
   };
 
   const handlePageChange = (newOffset) => {
-    dispatch(handlePagination(newOffset));
-    scrollToProducts();
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("offset", newOffset);
+    history.push({
+      pathname: location.pathname,
+      search: searchParams.toString()
+    });
   };
 
   const handleAddToCart = (product) => {
@@ -107,20 +112,19 @@ function ShopCards() {
   };
 
   // Yükleme ve hata durumları
-  if (fetchState === "FETCHING") {
-    return <div className="text-center p-4">Loading products...</div>;
+  if (fetchState === "loading") {
+    return <div className="text-center p-4">Ürünler yükleniyor...</div>;
   }
 
-  if (fetchState === "ERROR") {
-    return <div className="text-center p-4 text-red-500">Error loading products!</div>;
+  if (fetchState === "error") {
+    return <div className="text-center p-4 text-red-500">Ürünler yüklenirken bir hata oluştu!</div>;
   }
 
-  if (!productList.length) {
-    return <div className="text-center p-4">No products found.</div>;
+  if (!productList || !productList.length) {
+    return <div className="text-center p-4">Ürün bulunamadı.</div>;
   }
 
   // Sayfalama hesaplamaları
-  const currentProducts = productList.slice(offset, offset + limit);
   const totalPages = Math.ceil(total / limit);
   const currentPage = Math.floor(offset / limit) + 1;
 
@@ -129,6 +133,31 @@ function ShopCards() {
     if (sortOption === "none") return "Sort by...";
     const selectedOption = SORT_OPTIONS.find(opt => opt.value === sortOption);
     return selectedOption?.label || "Sort by...";
+  };
+
+  // Sayfalama butonlarını render et
+  const renderPaginationButtons = () => {
+    return (
+      <div className="flex justify-center gap-2 mt-8">
+        <Button
+          onClick={() => handlePageChange(offset - limit)}
+          disabled={currentPage === 1}
+          variant="outline"
+        >
+          Önceki
+        </Button>
+        <span className="flex items-center px-4 py-2 bg-gray-100 rounded">
+          {currentPage} / {totalPages}
+        </span>
+        <Button
+          onClick={() => handlePageChange(offset + limit)}
+          disabled={currentPage >= totalPages}
+          variant="outline"
+        >
+          Sonraki
+        </Button>
+      </div>
+    );
   };
 
   return (
@@ -185,7 +214,7 @@ function ShopCards() {
 
       {/* Ürün Grid'i */}
       <div ref={productsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {currentProducts.map((product) => (
+        {productList.map((product) => (
           <div
             key={product.id}
             className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
@@ -217,55 +246,7 @@ function ShopCards() {
       </div>
 
       {/* Sayfalama */}
-      <div className="flex justify-center items-center gap-4 mt-8">
-        <button
-          onClick={() => handlePageChange(0)}
-          disabled={offset === 0}
-          className={`px-4 py-2 rounded-full ${
-            offset === 0
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 hover:bg-blue-600"
-          } text-white transition-colors`}
-        >
-          First
-        </button>
-        <button
-          onClick={() => handlePageChange(Math.max(0, offset - limit))}
-          disabled={offset === 0}
-          className={`px-4 py-2 rounded-full ${
-            offset === 0
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 hover:bg-blue-600"
-          } text-white transition-colors`}
-        >
-          Previous
-        </button>
-        <span className="text-gray-700 font-[500]">
-          Page <span className="font-[800]">{currentPage}</span> / {totalPages}
-        </span>
-        <button
-          onClick={() => handlePageChange(offset + limit)}
-          disabled={offset + limit >= total}
-          className={`px-4 py-2 rounded-full ${
-            offset + limit >= total
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 hover:bg-blue-600"
-          } text-white transition-colors`}
-        >
-          Next
-        </button>
-        <button
-          onClick={() => handlePageChange((totalPages - 1) * limit)}
-          disabled={offset + limit >= total}
-          className={`px-4 py-2 rounded-full ${
-            offset + limit >= total
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 hover:bg-blue-600"
-          } text-white transition-colors`}
-        >
-          Last
-        </button>
-      </div>
+      {renderPaginationButtons()}
     </section>
   );
 }

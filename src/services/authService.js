@@ -40,7 +40,7 @@ export const loginUser = async (credentials) => {
       sessionStorage.setItem('token', response.data.token);
     }
     
-    // Axios header'��nı güncelle
+    // Axios header'ını güncelle
     authApi.defaults.headers.common['Authorization'] = response.data.token;
     
     console.log('Processed User Data:', userData);
@@ -73,8 +73,8 @@ export const fetchRoles = async () => {
 
 export const fetchProducts = async (queryString = '') => {
   try {
-    const response = await authApi.get(`/products${queryString ? `?${queryString}` : ''}`);
-    return response.data.products || [];
+    const response = await authApi.get(`/products${queryString}`);
+    return response.data;
   } catch (error) {
     console.error('Ürünler yüklenirken hata:', error);
     throw new Error('Ürünler yüklenirken bir hata oluştu');

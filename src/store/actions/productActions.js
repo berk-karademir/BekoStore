@@ -71,35 +71,27 @@ export const handlePagination = (newOffset) => (dispatch) => {
 
 // Thunk action creator for fetching products with parameters
 export const fetchProductsWithParams = (params) => async (dispatch) => {
-  dispatch(setFetchState("FETCHING"));
-  
+  dispatch(setFetchState('loading'));
   try {
-    // URL parametrelerini oluştur
-    const queryParams = new URLSearchParams();
+    // Mobil için sayfa başına 4 ürün
+    const limit = 4;
+    const offset = Math.max(0, parseInt(params?.offset) || 0);
+    const queryString = `?limit=${limit}&offset=${offset}${params?.category ? `&category=${params.category}` : ''}${params?.sort ? `&sort=${params.sort}` : ''}`;
     
-    if (params.category) {
-      queryParams.append("category", params.category);
-    }
-    if (params.sort) {
-      queryParams.append("sort", params.sort);
-    }
-    if (params.filter) {
-      queryParams.append("filter", params.filter);
-    }
+    const response = await fetchProducts(queryString);
     
-    // API çağrısı yap
-    const products = await fetchProducts(queryParams.toString());
-    
-    if (Array.isArray(products)) {
-      dispatch(setProductList(products));
-      dispatch(setTotal(products.length));
-      dispatch(setFetchState("FETCHED"));
+    if (response && Array.isArray(response.products)) {
+      dispatch(setProductList(response.products));
+      dispatch(setTotal(response.total));
+      dispatch(setLimit(limit));
+      dispatch(setOffset(offset));
+      dispatch(setFetchState('success'));
     } else {
-      console.error("Invalid products data:", products);
-      dispatch(setFetchState("ERROR"));
+      console.error('Geçersiz API yanıtı:', response);
+      dispatch(setFetchState('error'));
     }
   } catch (error) {
-    console.error("Error fetching products:", error);
-    dispatch(setFetchState("ERROR"));
+    console.error('Ürünler yüklenirken hata:', error);
+    dispatch(setFetchState('error'));
   }
 };
