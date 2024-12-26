@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import axiosInstance from '../../services/axiosInstance';
+import { clearCart } from './shoppingCartActions';
 
 // Action Types
 export const SET_CARD_INFO = 'SET_CARD_INFO';
@@ -355,9 +356,14 @@ export const submitPayment = (checkoutState, cartItems, calculateTotal) => async
       headers: { Authorization: token }
     });
 
-    toast.success('Sipariş başarıyla oluşturuldu!');
+    toast.success('🎉 Tebrikler! Siparişiniz başarıyla oluşturuldu!');
     dispatch(resetCheckout());
-    return response.data;
+    dispatch(clearCart());
+    
+    return {
+      orderId: response.data.id,
+      success: true
+    };
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'Sipariş oluşturulurken bir hata oluştu';
     toast.error(errorMessage);

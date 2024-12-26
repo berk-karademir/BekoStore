@@ -16,7 +16,7 @@ import { verifyToken } from './services/authService';
 import { setUser } from './store/actions/userActions';
 import { useDispatch } from 'react-redux';
 import axiosInstance from './services/axiosInstance';
-
+import OrderSuccessPage from './pages/OrderSuccessPage';
 function App() {
   const dispatch = useDispatch();
 
@@ -61,6 +61,7 @@ function App() {
         <Route path="/profile" component={Profile} />
         <Route path="/cart" component={CartPage} />
         <Route path="/checkout" component={CheckoutPage} />
+        <Route path="/order-success" component={OrderSuccessPage} />
       </Switch>
     </>
   );
