@@ -7,6 +7,7 @@ const authApi = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 15000,
 });
 
 export const registerUser = async (userData) => {
@@ -36,7 +37,21 @@ export const loginUser = async (credentials) => {
     return userData;
   } catch (error) {
     console.error('Login Error:', error);
-    throw error.response?.data || error.message;
+    
+    if (error.code === 'ERR_NETWORK') {
+      throw new Error('Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.');
+    }
+    
+    if (error.response) {
+      // Sunucudan hata yanıtı geldi
+      throw error.response.data || 'Giriş yapılırken bir hata oluştu';
+    } else if (error.request) {
+      // İstek yapıldı ama yanıt alınamadı
+      throw new Error('Sunucu yanıt vermiyor. Lütfen daha sonra tekrar deneyin.');
+    } else {
+      // İstek oluşturulurken bir hata oluştu
+      throw new Error('Giriş yapılırken beklenmeyen bir hata oluştu.');
+    }
   }
 };
 
@@ -82,7 +97,7 @@ export const fetchProducts = async () => {
 
     // Her ürünü kontrol edelim
     allProductLists.forEach(product => {
-      // Ürünün image URL'ini alalım
+      // Ürünün image URL'ini alal��m
       const imageUrl = product.images?.[0]?.url;
       
       // URL kontrolü yapalım

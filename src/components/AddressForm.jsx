@@ -53,9 +53,9 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
       newErrors.surname = 'Soyad gerekli';
     }
     
-    const phoneRegex = /^(05)[0-9][0-9][1-9]([0-9]){6}$/;
+    const phoneRegex = /^0[0-9]{3}\s[0-9]{3}\s[0-9]{2}\s[0-9]{2}$/;
     if (!phoneRegex.test(formData.phone)) {
-      newErrors.phone = 'Geçerli bir telefon numarası giriniz (05XX XXX XX XX)';
+      newErrors.phone = 'Geçerli bir telefon numarası giriniz (0512 123 45 67)';
     }
     
     if (!formData.city) {
@@ -86,25 +86,32 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
     }
 
     try {
+      const token = localStorage.getItem('token');
       const payload = {
         title: formData.title,
         name: formData.name,
         surname: formData.surname,
-        phone: formData.phone.replace(/\s/g, ''),
-        city: formData.city.toLowerCase(),
+        phone: formData.phone,
+        city: formData.city,
         district: formData.district,
         neighborhood: formData.neighborhood,
         address: formData.address
+      };
+
+      const config = {
+        headers: {
+          Authorization: token
+        }
       };
 
       if (editAddress) {
         await axiosInstance.put('/user/address', {
           id: editAddress.id,
           ...payload
-        });
+        }, config);
         toast.success('Adres güncellendi');
       } else {
-        await axiosInstance.post('/user/address', payload);
+        await axiosInstance.post('/user/address', payload, config);
         toast.success('Yeni adres eklendi');
       }
       
@@ -118,14 +125,16 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
 
   const formatPhoneNumber = (value) => {
     const cleaned = value.replace(/\D/g, '');
-    const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/);
-    if (match) {
-      return match
-        .slice(1)
-        .filter(Boolean)
-        .join(' ');
-    }
-    return cleaned;
+    
+    const numbers = cleaned.slice(0, 11);
+    
+    let formatted = '';
+    if (numbers.length > 0) formatted += numbers.slice(0, 4);
+    if (numbers.length > 4) formatted += ' ' + numbers.slice(4, 7);
+    if (numbers.length > 7) formatted += ' ' + numbers.slice(7, 9);
+    if (numbers.length > 9) formatted += ' ' + numbers.slice(9, 11);
+    
+    return formatted;
   };
 
   return (
@@ -192,7 +201,7 @@ function AddressForm({ onClose, editAddress = null, onAddressUpdate }) {
               value={formData.phone}
               onChange={(e) => setFormData({...formData, phone: formatPhoneNumber(e.target.value)})}
               className={`w-full px-3 py-2 border rounded-lg ${errors.phone ? 'border-red-500' : ''}`}
-              placeholder="05XX XXX XX XX"
+              placeholder="0512 123 45 67"
             />
             {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
           </div>

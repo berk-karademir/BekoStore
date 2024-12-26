@@ -191,10 +191,10 @@ export const submitPayment = (checkoutState, cartItems, calculateTotal) => async
       totalAmount: calculateTotal() + 29.99
     };
 
-    const response = await axiosInstance.post('/payment', paymentData);
+    const response = await axiosInstance.post('/order', paymentData);
     
     if (response.data.requires3D) {
-      const secure3DResponse = await axiosInstance.post('/payment/3d-secure', {
+      const secure3DResponse = await axiosInstance.post('/order', {
         paymentId: response.data.paymentId
       });
       window.location.href = secure3DResponse.data.redirectUrl;

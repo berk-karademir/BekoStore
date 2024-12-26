@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { fetchCategories } from "../services/fetchCategories";
 import { filterCategories, sortItems } from '@/utils/categoryUtils';
+import { useHistory } from "react-router-dom";
 
 const TopCategories = () => {
   const [categories, setCategories] = useState([]);
   const [selectedGender, setSelectedGender] = useState("");
-  const [sortOrder, setSortOrder] = useState(""); // Set to empty string by default
+  const [sortOrder, setSortOrder] = useState("");
+  const history = useHistory();
 
   useEffect(() => {
     const getCategories = async () => {
@@ -30,6 +32,11 @@ const TopCategories = () => {
 
   const topCategories = categories.sort((a, b) => b.rating - a.rating).slice(0, 5);
 
+  const handleCategoryClick = (category) => {
+    const gender = category.gender === "k" ? "kadin" : "erkek";
+    history.push(`/shop/${gender}/${category.title.toLowerCase()}/${category.id}`);
+  };
+
   return (
     <section>
       <div className="flex flex-col items-center gap-10">
@@ -40,7 +47,11 @@ const TopCategories = () => {
           <h3>Top Categories</h3>
           <div className="flex flex-col gap-20">
             {topCategories.map((category) => (
-              <div key={category.id} className="relative">
+              <div 
+                key={category.id} 
+                className="relative cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => handleCategoryClick(category)}
+              >
                 <img
                   className="w-screen h-auto"
                   src={category.img}

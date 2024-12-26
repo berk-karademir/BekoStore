@@ -102,10 +102,10 @@ function ShopCards() {
     <section className="p-10 bg-[#FAFAFA]">
       {/* Header ve Sıralama */}
       <div className="flex flex-col justify-between items-center">
-        <h3 className="text-2xl font-bold">ALL PRODUCTS</h3>
+        <h3 className="text-2xl font-bold mt-4">ALL PRODUCTS</h3>
         
         {/* Sort Dropdown */}
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative my-10" ref={dropdownRef}>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="px-4 py-2 bg-white border rounded-lg shadow-sm hover:bg-gray-50 flex items-center gap-2"
@@ -149,7 +149,7 @@ function ShopCards() {
             <img
               src={product.images?.[0]?.url || "/images/product-1.png"}
               alt={product.name}
-              className="w-full h-48 object-cover rounded-lg mb-4"
+              className="w-full object-cover rounded-lg mb-4"
               onError={(e) => {
                 e.target.src = "/images/product-1.png";
                 e.target.onerror = null;
@@ -196,8 +196,8 @@ function ShopCards() {
         >
           Previous
         </button>
-        <span className="text-gray-700">
-          Page {currentPage} / {totalPages}
+        <span className="text-gray-700 font-[500]">
+          Page <span className="font-[800]">{currentPage}</span> / {totalPages}
         </span>
         <button
           onClick={() => handlePageChange(offset + limit)}
