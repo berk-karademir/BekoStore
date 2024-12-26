@@ -18,12 +18,16 @@ import { useDispatch } from 'react-redux';
 import axiosInstance from './services/axiosInstance';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import OrderHistory from "./pages/OrderHistory";
+import ProductDetail from "./components/ProductDetail";
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    
     if (token) {
+      axiosInstance.defaults.headers.common['Authorization'] = token;
+      
       verifyToken()
         .then(user => {
           dispatch(setUser(user));
@@ -31,6 +35,7 @@ function App() {
         .catch(() => {
           // Token geçersiz ise temizleme işlemleri
           localStorage.removeItem('token');
+          sessionStorage.removeItem('token');
           delete axiosInstance.defaults.headers.common['Authorization'];
         });
     }
@@ -51,7 +56,17 @@ function App() {
         theme="light"
         toastStyle={{fontWeight:"600"}}
       /> 
+
       <Switch>
+
+      <Route path="/shop/:gender/:categoryName/:categoryId">
+          <ShopPage />
+        </Route> 
+
+        <Route path="/shop/:gender/:categoryName/:categoryId/:productNameSlug/:productId">
+          <ProductDetail />
+        </Route>
+        
         <Route exact path="/" component={HomePage} />
         <Route path="/shop" component={ShopPage} />
         <Route path="/about" component={AboutUs} />

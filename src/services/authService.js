@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const API_URL = 'https://workintech-fe-ecommerce.onrender.com';
 
-const authApi = axios.create({
+export const authApi = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -32,6 +32,16 @@ export const loginUser = async (credentials) => {
       role_id: response.data.role_id,
       token: response.data.token
     };
+
+    // Remember Me kontrolü
+    if (credentials.rememberMe) {
+      localStorage.setItem('token', response.data.token);
+    } else {
+      sessionStorage.setItem('token', response.data.token);
+    }
+    
+    // Axios header'��nı güncelle
+    authApi.defaults.headers.common['Authorization'] = response.data.token;
     
     console.log('Processed User Data:', userData);
     return userData;
@@ -43,13 +53,10 @@ export const loginUser = async (credentials) => {
     }
     
     if (error.response) {
-      // Sunucudan hata yanıtı geldi
       throw error.response.data || 'Giriş yapılırken bir hata oluştu';
     } else if (error.request) {
-      // İstek yapıldı ama yanıt alınamadı
       throw new Error('Sunucu yanıt vermiyor. Lütfen daha sonra tekrar deneyin.');
     } else {
-      // İstek oluşturulurken bir hata oluştu
       throw new Error('Giriş yapılırken beklenmeyen bir hata oluştu.');
     }
   }
@@ -64,56 +71,10 @@ export const fetchRoles = async () => {
   }
 };
 
-export const fetchProducts = async () => {
+export const fetchProducts = async (queryString = '') => {
   try {
-    const [
-      allProductsResponse,
-      category1Response,
-      category2Response,
-      category3Response
-    ] = await Promise.all([
-      authApi.get('/products'),
-      authApi.get('/products?category=1'),
-      authApi.get('/products?category=2'),
-      authApi.get('/products?category=3')
-    ]);
-
-    const allProducts = allProductsResponse.data.products || [];
-    const category1Products = category1Response.data.products || [];
-    const category2Products = category2Response.data.products || [];
-    const category3Products = category3Response.data.products || [];
-
-    // URL'leri saklayacağımız Set oluşturalım
-    const seenUrls = new Set();
-    const uniqueProducts = [];
-
-    // Tüm ürün listelerini birleştirelim
-    const allProductLists = [
-      ...allProducts,
-      ...category1Products,
-      ...category2Products,
-      ...category3Products
-    ];
-
-    // Her ürünü kontrol edelim
-    allProductLists.forEach(product => {
-      // Ürünün image URL'ini alal��m
-      const imageUrl = product.images?.[0]?.url;
-      
-      // URL kontrolü yapalım
-      if (imageUrl && !seenUrls.has(imageUrl)) {
-        // Yeni URL'i Set'e ekleyelim
-        seenUrls.add(imageUrl);
-        // Ürünü benzersiz listeye ekleyelim
-        uniqueProducts.push(product);
-      }
-    });
-
-    console.log('Görülen URL sayısı:', seenUrls.size);
-    console.log('Benzersiz ürün sayısı:', uniqueProducts.length);
-    
-    return uniqueProducts;
-
+    const response = await authApi.get(`/products${queryString ? `?${queryString}` : ''}`);
+    return response.data.products || [];
   } catch (error) {
     console.error('Ürünler yüklenirken hata:', error);
     throw new Error('Ürünler yüklenirken bir hata oluştu');
@@ -121,23 +82,36 @@ export const fetchProducts = async () => {
 };
 
 export const verifyToken = async () => {
-  const token = localStorage.getItem('token');
-  
-  if (!token) {
-    throw new Error('No token found');
-  }
-
   try {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    
+    if (!token) {
+      throw new Error('Token bulunamadı');
+    }
+
     const response = await authApi.get('/verify', {
       headers: {
-        Authorization: token // Bearer prefix'i olmadan
+        Authorization: token
       }
     });
+
+    // Token geçerliyse Axios header'ını güncelle
+    authApi.defaults.headers.common['Authorization'] = token;
+
     return response.data;
   } catch (error) {
+    // Token geçersizse tüm token bilgilerini temizle
     localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     delete authApi.defaults.headers.common['Authorization'];
     throw error;
   }
+};
+
+// Çıkış yapma fonksiyonu
+export const logout = () => {
+  localStorage.removeItem('token');
+  sessionStorage.removeItem('token');
+  delete authApi.defaults.headers.common['Authorization'];
 };
 

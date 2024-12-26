@@ -4,22 +4,22 @@ import { useHistory } from "react-router-dom";
 import { User, LogOut } from "lucide-react";
 import { fetchRoles, logout } from "../store/actions/clientActions";
 import Header from "../layout/Header.jsx";
-import { verifyToken } from '../services/authService';
+import { verifyToken } from "../services/authService";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 // Thunk action creator
 const verifyAndSetUser = () => async (dispatch) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      throw new Error('No token found');
+      throw new Error("No token found");
     }
-    
+
     const userData = await verifyToken();
-    dispatch({ type: 'SET_USER', payload: userData });
+    dispatch({ type: "SET_USER", payload: userData });
   } catch (error) {
     // Token yoksa veya geçersizse kullanıcıyı çıkış yaptır
-    dispatch({ type: 'CLEAR_USER' });
+    dispatch({ type: "CLEAR_USER" });
   }
 };
 
@@ -46,7 +46,7 @@ const Profile = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    history.push("/");  // Redirect to home page instead of login
+    history.push("/"); // Redirect to home page instead of login
   };
 
   // Show loading state while checking user
@@ -57,7 +57,7 @@ const Profile = () => {
   // Get role name from role_id
   const getUserRole = () => {
     if (!roles || roles.length === 0) return "Loading...";
-    const userRole = roles.find(role => role.id === Number(user.role_id));
+    const userRole = roles.find((role) => role.id === Number(user.role_id));
     return userRole ? userRole.name : "Unknown Role";
   };
 
@@ -70,7 +70,9 @@ const Profile = () => {
             <User size={64} className="text-gray-700" />
           </div>
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Profile Information</h2>
+            <h2 className="text-2xl font-bold text-gray-800">
+              Profile Information
+            </h2>
           </div>
           <div className="space-y-4">
             <div className="border-b pb-4">
@@ -83,25 +85,31 @@ const Profile = () => {
             </div>
             <div className="border-b pb-4">
               <p className="text-sm font-medium text-gray-500">Role</p>
-              <p className="text-lg text-gray-800 capitalize">{getUserRole()}</p>
+              <p className="text-lg text-gray-800 capitalize">
+                {getUserRole()}
+              </p>
             </div>
             <div className="border-b pb-4">
-            <Link to="/orders">
-            <p className="text-sm font-medium text-gray-500">Your Orders</p>
-                <p className="text-lg text-gray-800 ">Click to view your all orders</p>
+              <Link to="/orders">
+                <p className="text-sm font-medium text-gray-500">Your Orders</p>
+                <p className="text-lg text-gray-800 text-underline">
+                  Click to view your all orders
+                </p>
               </Link>
             </div>
-            
-              
-            
+
             {user.store && (
               <>
                 <div className="border-b pb-4">
-                  <p className="text-sm font-medium text-gray-500">Store Name</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Store Name
+                  </p>
                   <p className="text-lg text-gray-800">{user.store.name}</p>
                 </div>
                 <div className="border-b pb-4">
-                  <p className="text-sm font-medium text-gray-500">Store Phone</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Store Phone
+                  </p>
                   <p className="text-lg text-gray-800">{user.store.phone}</p>
                 </div>
                 <div className="border-b pb-4">
@@ -109,10 +117,13 @@ const Profile = () => {
                   <p className="text-lg text-gray-800">{user.store.tax_no}</p>
                 </div>
                 <div className="pb-4">
-                  <p className="text-sm font-medium text-gray-500">Bank Account</p>
-                  <p className="text-lg text-gray-800">{user.store.bank_account}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Bank Account
+                  </p>
+                  <p className="text-lg text-gray-800">
+                    {user.store.bank_account}
+                  </p>
                 </div>
-                
               </>
             )}
           </div>

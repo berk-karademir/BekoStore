@@ -54,7 +54,7 @@ export const sortProducts = (option) => (dispatch, getState) => {
       sortedProducts.sort((a, b) => parseFloat(a.rating) - parseFloat(b.rating));
       break;
     case "rating-desc":
-      sortedProducts.sort((a, b) => parseFloat(b.rating) - parseFloat(b.rating));
+      sortedProducts.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
       break;
     default:
       break;
@@ -69,12 +69,26 @@ export const handlePagination = (newOffset) => (dispatch) => {
   dispatch(setOffset(newOffset));
 };
 
-// Thunk action creator for fetching products
-export const fetchProductsAction = () => async (dispatch) => {
+// Thunk action creator for fetching products with parameters
+export const fetchProductsWithParams = (params) => async (dispatch) => {
   dispatch(setFetchState("FETCHING"));
   
   try {
-    const products = await fetchProducts();
+    // URL parametrelerini oluştur
+    const queryParams = new URLSearchParams();
+    
+    if (params.category) {
+      queryParams.append("category", params.category);
+    }
+    if (params.sort) {
+      queryParams.append("sort", params.sort);
+    }
+    if (params.filter) {
+      queryParams.append("filter", params.filter);
+    }
+    
+    // API çağrısı yap
+    const products = await fetchProducts(queryParams.toString());
     
     if (Array.isArray(products)) {
       dispatch(setProductList(products));
