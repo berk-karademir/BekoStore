@@ -111,6 +111,15 @@ function ShopCards() {
     toast.success(`${product.name} sepete eklendi!`);
   };
 
+  const handleProductClick = (product, gender, categoryName, categoryId) => {
+    const productNameSlug = product.name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-');
+    //`/shop/${gender || 'erkek'}/${categoryName || 'category'}/${categoryId || '0'}/${slug}/${product.id}`
+    history.push(`/shop/${gender}/${categoryName}/${categoryId}/${productNameSlug}/${product.id}`);
+  };
+
   // Yükleme ve hata durumları
   if (fetchState === "loading") {
     return <div className="text-center p-4">Ürünler yükleniyor...</div>;
@@ -217,12 +226,13 @@ function ShopCards() {
         {productList.map((product) => (
           <div
             key={product.id}
-            className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-white rounded-lg p-4 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+            onClick={() => handleProductClick(product)}
           >
             <img
               src={product.images?.[0]?.url || "/images/product-1.png"}
               alt={product.name}
-              className="w-full object-cover rounded-lg mb-4"
+              className="w-full h-48 object-cover rounded-lg mb-4"
               onError={(e) => {
                 e.target.src = "/images/product-1.png";
                 e.target.onerror = null;
@@ -233,13 +243,19 @@ function ShopCards() {
             </h3>
             <p className="text-gray-600 mb-2">
               ${product.price.toFixed(2)}
-              <span className="text-sm ml-2">({product.stock} in stock)</span>
+              <span className="text-sm ml-2">({product.stock} adet)</span>
             </p>
             <p className="text-gray-500 text-sm mb-4 line-clamp-2">
               {product.description}
             </p>
-            <Button onClick={() => handleAddToCart(product)} className="w-full">
-              Add to Cart
+            <Button 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(product);
+              }} 
+              className="w-full"
+            >
+              Sepete Ekle
             </Button>
           </div>
         ))}

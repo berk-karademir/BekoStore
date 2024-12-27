@@ -4,16 +4,22 @@ import {
   SET_LIMIT,
   SET_OFFSET,
   SET_TOTAL,
-  SET_SORT_OPTION
+  SET_SORT_OPTION,
+  FETCH_PRODUCT_DETAIL_REQUEST,
+  FETCH_PRODUCT_DETAIL_SUCCESS,
+  FETCH_PRODUCT_DETAIL_FAILURE
 } from '../actions/productActions';
 
 const initialState = {
   productList: [],
-  fetchState: 'NOT_FETCHED', // NOT_FETCHED, FETCHING, FETCHED, ERROR
-  limit: 4,
+  fetchState: 'idle',
+  limit: 10,
   offset: 0,
   total: 0,
-  sortOption: 'none'
+  sortOption: 'none',
+  currentProduct: null,
+  productDetailLoading: false,
+  productDetailError: null
 };
 
 const productReducer = (state = initialState, action) => {
@@ -47,6 +53,25 @@ const productReducer = (state = initialState, action) => {
       return {
         ...state,
         sortOption: action.payload
+      };
+    case FETCH_PRODUCT_DETAIL_REQUEST:
+      return {
+        ...state,
+        productDetailLoading: true,
+        productDetailError: null,
+        currentProduct: null
+      };
+    case FETCH_PRODUCT_DETAIL_SUCCESS:
+      return {
+        ...state,
+        productDetailLoading: false,
+        currentProduct: action.payload
+      };
+    case FETCH_PRODUCT_DETAIL_FAILURE:
+      return {
+        ...state,
+        productDetailLoading: false,
+        productDetailError: action.payload
       };
     default:
       return state;

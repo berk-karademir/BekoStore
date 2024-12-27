@@ -18,7 +18,8 @@ import { useDispatch } from 'react-redux';
 import axiosInstance from './services/axiosInstance';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import OrderHistory from "./pages/OrderHistory";
-import ProductDetail from "./components/ProductDetail";
+import ProductDetailPage from './pages/ProductDetailPage';
+
 function App() {
   const dispatch = useDispatch();
 
@@ -58,15 +59,8 @@ function App() {
       /> 
 
       <Switch>
-
-      <Route path="/shop/:gender/:categoryName/:categoryId">
-          <ShopPage />
-        </Route> 
-
-        <Route path="/shop/:gender/:categoryName/:categoryId/:productNameSlug/:productId">
-          <ProductDetail />
-        </Route>
-        
+        <Route path="/shop/:gender/:categoryName/:categoryId/:productNameSlug/:productId" component={ProductDetailPage} />
+        <Route path="/shop/:gender/:categoryName/:categoryId" component={ShopPage} />
         <Route exact path="/" component={HomePage} />
         <Route path="/shop" component={ShopPage} />
         <Route path="/about" component={AboutUs} />

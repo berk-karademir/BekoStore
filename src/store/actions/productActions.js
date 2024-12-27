@@ -1,4 +1,5 @@
 import { fetchProducts } from "../../services/authService";
+import axiosInstance from "../../services/axiosInstance";
 
 export const SET_PRODUCT_LIST = 'SET_PRODUCT_LIST';
 export const SET_FETCH_STATE = 'SET_FETCH_STATE';
@@ -7,6 +8,10 @@ export const SET_OFFSET = 'SET_OFFSET';
 export const SET_TOTAL = 'SET_TOTAL';
 export const SET_SORT_OPTION = 'SET_SORT_OPTION';
 export const SORT_PRODUCTS = 'SORT_PRODUCTS';
+export const SET_CURRENT_PRODUCT = 'SET_CURRENT_PRODUCT';
+export const FETCH_PRODUCT_DETAIL_REQUEST = "FETCH_PRODUCT_DETAIL_REQUEST";
+export const FETCH_PRODUCT_DETAIL_SUCCESS = "FETCH_PRODUCT_DETAIL_SUCCESS";
+export const FETCH_PRODUCT_DETAIL_FAILURE = "FETCH_PRODUCT_DETAIL_FAILURE";
 
 export const setProductList = (products) => ({
   type: SET_PRODUCT_LIST,
@@ -36,6 +41,11 @@ export const setTotal = (total) => ({
 export const setSortOption = (option) => ({
   type: SET_SORT_OPTION,
   payload: option
+});
+
+export const setCurrentProduct = (product) => ({
+  type: SET_CURRENT_PRODUCT,
+  payload: product
 });
 
 // Thunk action creator for sorting products
@@ -93,5 +103,22 @@ export const fetchProductsWithParams = (params) => async (dispatch) => {
   } catch (error) {
     console.error('Ürünler yüklenirken hata:', error);
     dispatch(setFetchState('error'));
+  }
+};
+
+// Thunk action creator for fetching product detail
+export const fetchProductDetail = (productId) => async (dispatch) => {
+  dispatch({ type: FETCH_PRODUCT_DETAIL_REQUEST });
+  try {
+    const response = await axiosInstance.get(`/products/${productId}`);
+    dispatch({
+      type: FETCH_PRODUCT_DETAIL_SUCCESS,
+      payload: response.data
+    });
+  } catch (error) {
+    dispatch({
+      type: FETCH_PRODUCT_DETAIL_FAILURE,
+      payload: error.message
+    });
   }
 };

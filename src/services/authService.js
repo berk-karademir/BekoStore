@@ -81,6 +81,16 @@ export const fetchProducts = async (queryString = '') => {
   }
 };
 
+export const fetchProductDetail = async (productId) => {
+  try {
+    const response = await authApi.get(`/products/${productId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Ürün detayı yüklenirken hata:', error);
+    throw new Error('Ürün detayı yüklenirken bir hata oluştu');
+  }
+};
+
 export const verifyToken = async () => {
   try {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
