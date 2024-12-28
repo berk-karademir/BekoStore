@@ -86,7 +86,7 @@ export const fetchProductsWithParams = (params) => async (dispatch) => {
     // Mobil için sayfa başına 4 ürün
     const limit = 4;
     const offset = Math.max(0, parseInt(params?.offset) || 0);
-    const queryString = `?limit=${limit}&offset=${offset}${params?.category ? `&category=${params.category}` : ''}${params?.sort ? `&sort=${params.sort}` : ''}`;
+    const queryString = `?limit=${limit}&offset=${offset}${params?.category ? `&category=${params.category}` : ''}${params?.sort ? `&sort=${params.sort}` : ''}${params?.filter ? `&filter=${params.filter}` : ''}`;
     
     const response = await fetchProducts(queryString);
     

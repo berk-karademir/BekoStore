@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory, useLocation } from "react-router-dom";
-import { fetchProducts } from "../services/authService";
 import {
   setLimit,
   fetchProductsWithParams,
-  sortProducts,
-  handlePagination
+ 
 } from "../store/actions/productActions";
 import { addToCart } from "../store/actions/shoppingCartActions";
 import { Button } from "./ui/button";
@@ -29,7 +27,7 @@ function ShopCards() {
   
   // URL'den mevcut parametreleri al
   const searchParams = new URLSearchParams(location.search);
-  const [filterText, setFilterText] = useState(searchParams.get("filter") || "");
+  const [filter, setFilter] = useState(searchParams.get("filter") || "");
   
   const { productList, fetchState, limit, offset, total, sortOption } = useSelector(
     (state) => state.product
@@ -50,9 +48,12 @@ function ShopCards() {
       offset: searchParams.get("offset") || 0,
       category: categoryId,
       sort: searchParams.get("sort"),
-      filter: searchParams.get("filter")
+      filter: searchParams.get("filter") || ""
     };
-    dispatch(fetchProductsWithParams(params));
+    // URL'den gelen değişikliklerde tekrar istek atma
+    if (!searchParams.get("filter")) {
+      dispatch(fetchProductsWithParams(params));
+    }
   }, [dispatch, categoryId, location.search]);
 
   // Dropdown dışına tıklandığında kapat
@@ -82,12 +83,22 @@ function ShopCards() {
     });
   };
 
-  const handleFilter = (e) => {
-    const value = e.target.value;
-    setFilterText(value);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const searchValue = filter.trim();
     const searchParams = new URLSearchParams(location.search);
-    if (value) {
-      searchParams.set("filter", value);
+    
+    // API'ye istek at
+    dispatch(fetchProductsWithParams({
+      offset: 0,
+      category: categoryId,
+      sort: searchParams.get("sort"),
+      filter: searchValue
+    }));
+
+    // URL'yi güncelle
+    if (searchValue) {
+      searchParams.set("filter", searchValue);
     } else {
       searchParams.delete("filter");
     }
@@ -99,6 +110,16 @@ function ShopCards() {
 
   const handlePageChange = (newOffset) => {
     const searchParams = new URLSearchParams(location.search);
+    
+    // API'ye istek at
+    dispatch(fetchProductsWithParams({
+      offset: newOffset,
+      category: categoryId,
+      sort: searchParams.get("sort"),
+      filter: searchParams.get("filter") || ""
+    }));
+
+    // URL'yi güncelle
     searchParams.set("offset", newOffset);
     history.push({
       pathname: location.pathname,
@@ -116,7 +137,6 @@ function ShopCards() {
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-');
-    //`/shop/${gender || 'erkek'}/${categoryName || 'category'}/${categoryId || '0'}/${slug}/${product.id}`
     history.push(`/shop/${gender}/${categoryName}/${categoryId}/${productNameSlug}/${product.id}`);
   };
 
@@ -173,18 +193,27 @@ function ShopCards() {
     <section className="p-10 bg-[#FAFAFA]">
       {/* Header ve Filtreler */}
       <div className="flex flex-col justify-between items-center">
-        <h3 className="text-2xl font-bold mt-4">ALL PRODUCTS</h3>
+        <h3 className="text-2xl font-bold mt-4">TÜM ÜRÜNLER</h3>
         
-        <div className="flex gap-4 items-center my-10">
-          {/* Filter Input */}
-          <input
-            type="text"
-            value={filterText}
-            onChange={handleFilter}
-            placeholder="Ürün ara..."
-            className="px-4 py-2 border rounded-lg"
-          />
-          
+        <div className="flex flex-col md:flex-row w-full max-w-4xl gap-4 items-center my-10">
+          {/* Arama Formu */}
+          <div className="w-full">
+            <form onSubmit={handleSearch} className="flex gap-2">
+              <input
+                type="text"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                placeholder="Ürün ara..."
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              />
+              <button
+                type="submit"
+                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Ara
+              </button>
+            </form>
+          </div>
           {/* Sort Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
