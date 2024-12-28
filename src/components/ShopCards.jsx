@@ -4,7 +4,7 @@ import { useParams, useHistory, useLocation } from "react-router-dom";
 import {
   setLimit,
   fetchProductsWithParams,
- 
+  setSortOption
 } from "../store/actions/productActions";
 import { addToCart } from "../store/actions/shoppingCartActions";
 import { Button } from "./ui/button";
@@ -74,6 +74,9 @@ function ShopCards() {
     setIsDropdownOpen(false);
     const searchParams = new URLSearchParams(location.search);
     searchParams.set("sort", option);
+    
+    // Sort seçeneğini Redux store'a kaydet
+    dispatch(setSortOption(option));
     
     // API'ye istek at
     dispatch(fetchProductsWithParams({
@@ -166,9 +169,8 @@ function ShopCards() {
 
   // Dropdown menü başlığı
   const getDropdownTitle = () => {
-    if (sortOption === "none") return "Sort by...";
     const selectedOption = SORT_OPTIONS.find(opt => opt.value === sortOption);
-    return selectedOption?.label || "Sort by...";
+    return selectedOption ? selectedOption.label : "Sort by...";
   };
 
   // Sayfalama butonlarını render et
