@@ -50,10 +50,7 @@ function ShopCards() {
       sort: searchParams.get("sort"),
       filter: searchParams.get("filter") || ""
     };
-    // URL'den gelen değişikliklerde tekrar istek atma
-    if (!searchParams.get("filter")) {
-      dispatch(fetchProductsWithParams(params));
-    }
+    dispatch(fetchProductsWithParams(params));
   }, [dispatch, categoryId, location.search]);
 
   // Dropdown dışına tıklandığında kapat
@@ -77,6 +74,16 @@ function ShopCards() {
     setIsDropdownOpen(false);
     const searchParams = new URLSearchParams(location.search);
     searchParams.set("sort", option);
+    
+    // API'ye istek at
+    dispatch(fetchProductsWithParams({
+      offset: searchParams.get("offset") || 0,
+      category: categoryId,
+      sort: option,
+      filter: searchParams.get("filter") || ""
+    }));
+
+    // URL'yi güncelle
     history.push({
       pathname: location.pathname,
       search: searchParams.toString()

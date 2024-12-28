@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Header from "@/layout/Header";
 import TopCategories from "@/components/TopCategories";
 import ShopCards from "@/components/ShopCards";
