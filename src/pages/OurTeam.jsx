@@ -13,10 +13,19 @@ const OurTeam = () => {
     },
     {
       name: "Gökhan Özdemir",
-      role: "Senior Dev, PM, Scrum Master, Technical Support, Juniors' Guide, Aga",
+      role: "Senior Dev, PM, Scrum Master, Technical Support, Juniors' Guide, Aga #06",
       image: {
-        src: "https://avatars.githubusercontent.com/u/8511119?v=4",
+        src: "https://www.workintech.com.tr/team/gokhanozdemir.webp",
         alt: "Gökhan Özdemir",
+      },
+      
+    },
+    {
+      name: "Emre Şahiner",
+      role: "Senior Dev",
+      image: {
+        src: "https://www.workintech.com.tr/team/emresahiner.webp",
+        alt: "Emre Şahiner",
       },
     },
     {

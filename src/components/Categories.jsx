@@ -3,7 +3,7 @@ import { fetchCategories } from "../services/fetchCategories";
 import { filterCategories, sortItems } from '@/utils/categoryUtils';
 import { useHistory } from "react-router-dom";
 
-const TopCategories = () => {
+const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [selectedGender, setSelectedGender] = useState("");
   const [sortOrder, setSortOrder] = useState("");
@@ -71,4 +71,4 @@ const TopCategories = () => {
   );
 };
 
-export default TopCategories;
+export default Categories;
