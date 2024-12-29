@@ -178,6 +178,13 @@ function ShopCards() {
     return (
       <div className="flex justify-center gap-2 mt-8">
         <Button
+          onClick={() => handlePageChange(0)}
+          disabled={currentPage === 1}
+          variant="outline"
+        >
+          İlk
+        </Button>
+        <Button
           onClick={() => handlePageChange(offset - limit)}
           disabled={currentPage === 1}
           variant="outline"
@@ -194,12 +201,19 @@ function ShopCards() {
         >
           Sonraki
         </Button>
+        <Button
+          onClick={() => handlePageChange((totalPages - 1) * limit)}
+          disabled={currentPage >= totalPages}
+          variant="outline"
+        >
+          Son
+        </Button>
       </div>
     );
   };
 
   return (
-    <section className="p-10 bg-[#FAFAFA]">
+    <section className="p-10 bg-[#a12b2b]">
       {/* Header ve Filtreler */}
       <div className="flex flex-col justify-between items-center">
         <h3 className="text-2xl font-bold mt-4">TÜM ÜRÜNLER</h3>
