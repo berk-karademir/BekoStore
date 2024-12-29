@@ -91,19 +91,17 @@ function AboutUs() {
             <h2 className="text-4xl font-bold text-gray-800">200+</h2>
             <p className="text-gray-600 mr-4">Partners</p>
           </div>
-          
         </div>
-        
       </div>
       <iframe
-            className="mt-14"
-            src="https://www.youtube.com/embed/wf4F2-9UXUo?si=GvucjSMedscLLEot"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-          ></iframe>
+        className="mt-14"
+        src="https://www.youtube.com/embed/wf4F2-9UXUo?si=GvucjSMedscLLEot"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
       <Footer />
     </section>
   );

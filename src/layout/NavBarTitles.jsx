@@ -63,7 +63,10 @@ function NavBarTitles() {
                       </Link>
                     ))}
                   </div>
-                  <div className="w-[1px] bg-gray-300 absolute h-full top-0" style={{ left: '50%' }}></div>
+                  <div
+                    className="w-[1px] bg-gray-300 absolute h-full top-0"
+                    style={{ left: "50%" }}
+                  ></div>
                   <div>
                     <h3 className="font-bold text-2xl mb-2 text-black">
                       Erkek

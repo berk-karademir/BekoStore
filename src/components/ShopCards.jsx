@@ -335,7 +335,6 @@ function ShopCards() {
           </div>
         ))}
       </div>
-
       {/* Sayfalama */}
       {renderPaginationButtons()}
     </section>
