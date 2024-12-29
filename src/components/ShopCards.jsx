@@ -4,7 +4,7 @@ import { useParams, useHistory, useLocation } from "react-router-dom";
 import {
   setLimit,
   fetchProductsWithParams,
-  setSortOption
+  setSortOption,
 } from "../store/actions/productActions";
 import { addToCart } from "../store/actions/shoppingCartActions";
 import { Button } from "./ui/button";
@@ -16,7 +16,7 @@ const SORT_OPTIONS = [
   { value: "price:asc", label: "Price: Ascending" },
   { value: "price:desc", label: "Price: Descending" },
   { value: "rating:asc", label: "Rating: Ascending" },
-  { value: "rating:desc", label: "Rating: Descending" }
+  { value: "rating:desc", label: "Rating: Descending" },
 ];
 
 function ShopCards() {
@@ -24,14 +24,13 @@ function ShopCards() {
   const history = useHistory();
   const location = useLocation();
   const { categoryId } = useParams();
-  
+
   // URL'den mevcut parametreleri al
   const searchParams = new URLSearchParams(location.search);
   const [filter, setFilter] = useState(searchParams.get("filter") || "");
-  
-  const { productList, fetchState, limit, offset, total, sortOption } = useSelector(
-    (state) => state.product
-  );
+
+  const { productList, fetchState, limit, offset, total, sortOption } =
+    useSelector((state) => state.product);
   const productsRef = useRef(null);
   const dropdownRef = useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
@@ -48,7 +47,7 @@ function ShopCards() {
       offset: searchParams.get("offset") || 0,
       category: categoryId,
       sort: searchParams.get("sort"),
-      filter: searchParams.get("filter") || ""
+      filter: searchParams.get("filter") || "",
     };
     dispatch(fetchProductsWithParams(params));
   }, [dispatch, categoryId, location.search]);
@@ -74,22 +73,24 @@ function ShopCards() {
     setIsDropdownOpen(false);
     const searchParams = new URLSearchParams(location.search);
     searchParams.set("sort", option);
-    
+
     // Sort seçeneğini Redux store'a kaydet
     dispatch(setSortOption(option));
-    
+
     // API'ye istek at
-    dispatch(fetchProductsWithParams({
-      offset: searchParams.get("offset") || 0,
-      category: categoryId,
-      sort: option,
-      filter: searchParams.get("filter") || ""
-    }));
+    dispatch(
+      fetchProductsWithParams({
+        offset: searchParams.get("offset") || 0,
+        category: categoryId,
+        sort: option,
+        filter: searchParams.get("filter") || "",
+      })
+    );
 
     // URL'yi güncelle
     history.push({
       pathname: location.pathname,
-      search: searchParams.toString()
+      search: searchParams.toString(),
     });
   };
 
@@ -97,14 +98,16 @@ function ShopCards() {
     e.preventDefault();
     const searchValue = filter.trim();
     const searchParams = new URLSearchParams(location.search);
-    
+
     // API'ye istek at
-    dispatch(fetchProductsWithParams({
-      offset: 0,
-      category: categoryId,
-      sort: searchParams.get("sort"),
-      filter: searchValue
-    }));
+    dispatch(
+      fetchProductsWithParams({
+        offset: 0,
+        category: categoryId,
+        sort: searchParams.get("sort"),
+        filter: searchValue,
+      })
+    );
 
     // URL'yi güncelle
     if (searchValue) {
@@ -114,26 +117,28 @@ function ShopCards() {
     }
     history.push({
       pathname: location.pathname,
-      search: searchParams.toString()
+      search: searchParams.toString(),
     });
   };
 
   const handlePageChange = (newOffset) => {
     const searchParams = new URLSearchParams(location.search);
-    
+
     // API'ye istek at
-    dispatch(fetchProductsWithParams({
-      offset: newOffset,
-      category: categoryId,
-      sort: searchParams.get("sort"),
-      filter: searchParams.get("filter") || ""
-    }));
+    dispatch(
+      fetchProductsWithParams({
+        offset: newOffset,
+        category: categoryId,
+        sort: searchParams.get("sort"),
+        filter: searchParams.get("filter") || "",
+      })
+    );
 
     // URL'yi güncelle
     searchParams.set("offset", newOffset);
     history.push({
       pathname: location.pathname,
-      search: searchParams.toString()
+      search: searchParams.toString(),
     });
   };
 
@@ -145,9 +150,11 @@ function ShopCards() {
   const handleProductClick = (product, gender, categoryName, categoryId) => {
     const productNameSlug = product.name
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-');
-    history.push(`/shop/${gender}/${categoryName}/${categoryId}/${productNameSlug}/${product.id}`);
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-");
+    history.push(
+      `/shop/${gender}/${categoryName}/${categoryId}/${productNameSlug}/${product.id}`
+    );
   };
 
   // Yükleme ve hata durumları
@@ -156,7 +163,11 @@ function ShopCards() {
   }
 
   if (fetchState === "error") {
-    return <div className="text-center p-4 text-red-500">Ürünler yüklenirken bir hata oluştu!</div>;
+    return (
+      <div className="text-center p-4 text-red-500">
+        Ürünler yüklenirken bir hata oluştu!
+      </div>
+    );
   }
 
   if (!productList || !productList.length) {
@@ -169,7 +180,7 @@ function ShopCards() {
 
   // Dropdown menü başlığı
   const getDropdownTitle = () => {
-    const selectedOption = SORT_OPTIONS.find(opt => opt.value === sortOption);
+    const selectedOption = SORT_OPTIONS.find((opt) => opt.value === sortOption);
     return selectedOption ? selectedOption.label : "Sort by...";
   };
 
@@ -213,11 +224,11 @@ function ShopCards() {
   };
 
   return (
-    <section className="p-10 bg-[#a12b2b]">
+    <section className="p-10 bg-[#FAFAFA]">
       {/* Header ve Filtreler */}
       <div className="flex flex-col justify-between items-center">
         <h3 className="text-2xl font-bold mt-4">TÜM ÜRÜNLER</h3>
-        
+
         <div className="flex flex-col md:flex-row w-full max-w-4xl gap-4 items-center my-10">
           {/* Arama Formu */}
           <div className="w-full">
@@ -245,12 +256,19 @@ function ShopCards() {
             >
               <span className="text-gray-700">{getDropdownTitle()}</span>
               <svg
-                className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                className={`w-4 h-4 transition-transform ${
+                  isDropdownOpen ? "rotate-180" : ""
+                }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
 
@@ -261,7 +279,9 @@ function ShopCards() {
                     key={option.value}
                     onClick={() => handleSort(option.value)}
                     className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
-                      sortOption === option.value ? "bg-blue-50 text-blue-600" : "text-gray-700"
+                      sortOption === option.value
+                        ? "bg-blue-50 text-blue-600"
+                        : "text-gray-700"
                     }`}
                   >
                     {option.label}
@@ -274,7 +294,10 @@ function ShopCards() {
       </div>
 
       {/* Ürün Grid'i */}
-      <div ref={productsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        ref={productsRef}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
         {productList.map((product) => (
           <div
             key={product.id}
@@ -284,7 +307,7 @@ function ShopCards() {
             <img
               src={product.images?.[0]?.url || "/images/product-1.png"}
               alt={product.name}
-              className="w-full h-48 object-cover rounded-lg mb-4"
+              className="rounded-lg mb-4"
               onError={(e) => {
                 e.target.src = "/images/product-1.png";
                 e.target.onerror = null;
@@ -300,11 +323,11 @@ function ShopCards() {
             <p className="text-gray-500 text-sm mb-4 line-clamp-2">
               {product.description}
             </p>
-            <Button 
+            <Button
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(product);
-              }} 
+              }}
               className="w-full"
             >
               Sepete Ekle
