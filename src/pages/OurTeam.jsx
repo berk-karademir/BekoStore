@@ -14,7 +14,7 @@ const OurTeam = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          "https://445beb81-518e-4859-8373-14ae012ac636.mock.pstmn.io/members"
+          "https://97d6bd57-40be-4949-a4b0-bcb3c2e528b2.mock.pstmn.io/members"
         );
         setTeamData(response.data);
       } catch (err) {
@@ -75,16 +75,16 @@ const OurTeam = () => {
                 {member.role}
               </p>
               <div className="mt-6 flex items-center justify-center gap-5">
-                {member.socials.linkedin.profile_url && (
+                {member.socials?.linkedin?.profile_url && (
                   <a
-                    href={member.socials.linkedin.profile_url}
+                    href={member.socials?.linkedin?.profile_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:scale-125 transition-transform"
                   >
-                    <img 
-                      src={member.socials.linkedin.icon} 
-                      alt="LinkedIn" 
+                    <img
+                      src={member.socials?.linkedin?.icon}
+                      alt="LinkedIn"
                       className="w-8 h-8"
                     />
                   </a>
@@ -96,9 +96,9 @@ const OurTeam = () => {
                     rel="noopener noreferrer"
                     className="hover:scale-125 transition-transform"
                   >
-                    <img 
-                      src={member.socials.github.icon} 
-                      alt="GitHub" 
+                    <img
+                      src={member.socials.github.icon}
+                      alt="GitHub"
                       className="w-8 h-8"
                     />
                   </a>
