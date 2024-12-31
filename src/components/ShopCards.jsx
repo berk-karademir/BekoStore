@@ -9,6 +9,7 @@ import {
 import { addToCart } from "../store/actions/shoppingCartActions";
 import { Button } from "./ui/button";
 import { toast } from "react-toastify";
+import { fetchCategories } from "../services/fetchCategories";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -24,6 +25,7 @@ function ShopCards() {
   const history = useHistory();
   const location = useLocation();
   const { categoryId } = useParams();
+  const [categories, setCategories] = useState([]);
 
   // URL'den mevcut parametreleri al
   const searchParams = new URLSearchParams(location.search);
@@ -39,6 +41,14 @@ function ShopCards() {
   useEffect(() => {
     dispatch(setLimit(ITEMS_PER_PAGE));
   }, [dispatch]);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const fetchedCategories = await fetchCategories();
+      setCategories(fetchedCategories);
+    };
+    getCategories();
+  }, []);
 
   // URL parametreleri değiştiğinde ürünleri getir
   useEffect(() => {
@@ -146,14 +156,13 @@ function ShopCards() {
     dispatch(addToCart(product));
     toast.success(`${product.name} sepete eklendi!`);
   };
-
-  const handleProductClick = (product, gender, categoryName, categoryId) => {
-    const productNameSlug = product.name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-");
+  //URL should be like: shop/:gender/:categoryName/:categoryId/:productNameSlug/:productId
+  const handleProductClick = (product) => {
+    const categoryId = product.category_id;
+    const categoryName = categories.find((cat) => cat.id === categoryId).title;
+    const gender = product.category_id < 9 ? "kadin" : "erkek";
     history.push(
-      `/shop/${gender}/${categoryName}/${categoryId}/${productNameSlug}/${product.id}`
+      `/shop/${gender}/${categoryName}/${categoryId}/${product.name}/${product.id}`
     );
   };
 
@@ -184,6 +193,10 @@ function ShopCards() {
     return selectedOption ? selectedOption.label : "Sort by...";
   };
 
+  const groupedCategories = {
+    erkek: categories.filter((cat) => cat.gender === "e"),
+    kadin: categories.filter((cat) => cat.gender === "k"),
+  };
   // Sayfalama butonlarını render et
   const renderPaginationButtons = () => {
     return (
