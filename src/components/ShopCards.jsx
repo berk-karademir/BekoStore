@@ -20,6 +20,20 @@ const SORT_OPTIONS = [
   { value: "rating:desc", label: "Rating: Descending" },
 ];
 
+function createSlug(name) {
+  return name
+    .toLowerCase()
+    .replace(/ç/g, "c")
+    .replace(/ğ/g, "g")
+    .replace(/ı/g, "i")
+    .replace(/ö/g, "o")
+    .replace(/ş/g, "s")
+    .replace(/ü/g, "u")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-");
+}
+
 function ShopCards() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -162,7 +176,9 @@ function ShopCards() {
     const categoryName = categories.find((cat) => cat.id === categoryId).title;
     const gender = product.category_id < 9 ? "kadin" : "erkek";
     history.push(
-      `/shop/${gender}/${categoryName}/${categoryId}/${product.name}/${product.id}`
+      `/shop/${gender}/${createSlug(categoryName)}/${categoryId}/${createSlug(
+        product.name
+      )}/${product.id}`
     );
   };
 
