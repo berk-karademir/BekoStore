@@ -3,12 +3,16 @@ import { useForm, Controller } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
-import { LogIn } from "lucide-react";
-import Spinner from "./Spinner";
+import { LoaderCircle, LogIn } from "lucide-react";
 import { toast } from "react-toastify";
 import { setUser, fetchRoles } from "../store/actions/clientActions";
 import { Button } from "./ui/button";
-import { nameValidation, emailValidation, passwordValidation, storeValidations } from "../validations/signupValidations";
+import {
+  nameValidation,
+  emailValidation,
+  passwordValidation,
+  storeValidations,
+} from "../validations/signupValidations";
 
 const SignUp = () => {
   const {
@@ -24,7 +28,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const history = useHistory();
-  const roles = useSelector(state => state.client.roles);
+  const roles = useSelector((state) => state.client.roles);
 
   // İlk useEffect - rolleri yükle
   useEffect(() => {
@@ -33,7 +37,7 @@ const SignUp = () => {
         setLoading(true);
         await dispatch(fetchRoles());
       } catch (error) {
-        console.error('Error loading roles:', error);
+        console.error("Error loading roles:", error);
       } finally {
         setLoading(false);
       }
@@ -45,7 +49,7 @@ const SignUp = () => {
   // İkinci useEffect - varsayılan rolü ayarla
   useEffect(() => {
     if (roles && roles.length > 0 && !selectedRole) {
-      const defaultRole = roles.find(role => role.code === "customer");
+      const defaultRole = roles.find((role) => role.code === "customer");
       if (defaultRole) {
         setValue("role_id", defaultRole.id);
         setSelectedRole(defaultRole.code);
@@ -78,13 +82,20 @@ const SignUp = () => {
 
     try {
       const submitData = selectedRole === "store" ? storeData : essentialData;
-      const response = await axios.post("https://workintech-fe-ecommerce.onrender.com/signup", submitData);
-      dispatch(setUser({
-        ...response.data,
-        role: selectedRole
-      }));
-      
-      toast.success("Registration successful! Check your email for verification.");
+      const response = await axios.post(
+        "https://workintech-fe-ecommerce.onrender.com/signup",
+        submitData
+      );
+      dispatch(
+        setUser({
+          ...response.data,
+          role: selectedRole,
+        })
+      );
+
+      toast.success(
+        "Registration successful! Check your email for verification."
+      );
       history.push("/");
     } catch (error) {
       toast.error("Sign-up failed. Please check the form and try again.");
@@ -98,7 +109,13 @@ const SignUp = () => {
         className="min-h-screen min-w-screen flex flex-col items-center text-[1rem] bg-gradient-to-t from-[#5431b3] via-[#66cad1] to-[#ca0a0a]"
       >
         <h2 className="text-3xl font-bold text-gray-800 py-10">
-          Sign Up For <Link to="/" className="hover:text-gray-600 transition-colors text-white">BekoStore</Link>
+          Sign Up for{" "}
+          <Link
+            to="/"
+            className="hover:text-gray-600 transition-colors text-white"
+          >
+            BekoStore
+          </Link>
         </h2>
 
         <div className=" rounded-xl shadow-[15px_15px_5px_1px_rgba(0,0,0,0.7)] bg-[#e7ebee] p-10">
@@ -189,9 +206,7 @@ const SignUp = () => {
                     const selectedOption = roles.find(
                       (role) => role.id === Number(e.target.value)
                     );
-                    setSelectedRole(
-                      selectedOption ? selectedOption.code : ""
-                    );
+                    setSelectedRole(selectedOption ? selectedOption.code : "");
                     setValue("role_id", e.target.value);
                   }}
                 >
@@ -203,7 +218,9 @@ const SignUp = () => {
                       </option>
                     ))
                   ) : (
-                    <option value="" disabled>Loading roles...</option>
+                    <option value="" disabled>
+                      Loading roles...
+                    </option>
                   )}
                 </select>
               )}
@@ -270,7 +287,10 @@ const SignUp = () => {
                 </label>
                 <input
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register("storeBankAccount", storeValidations.storeBankAccount)}
+                  {...register(
+                    "storeBankAccount",
+                    storeValidations.storeBankAccount
+                  )}
                   placeholder="TRXXXXXXXXXXXXXX"
                 />
                 {errors.storeBankAccount && (
@@ -281,16 +301,19 @@ const SignUp = () => {
               </div>
             </>
           )}
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <div className="flex justify-center">
-                {" "}
-                <Spinner /> {"Please Wait..."}{" "}
-              </div>
-            ) : (
-              "Sign Up"
-            )}
-          </Button>
+          <div className="flex justify-center">
+            <Button disabled={isSubmitting} type="submit" className="w-full">
+              {" "}
+              {isSubmitting ? (
+                <div className="flex items-center">
+                  <LoaderCircle className="animate-spin" />{" "}
+                  <p className="px-2 font-[700]">Please wait...</p>
+                </div>
+              ) : (
+                "Sign Up"
+              )}
+            </Button>
+          </div>
         </div>
         <div className="text-gray-900 flex flex-col items-center text-center font-bold pt-10">
           <p className="mb-2">Already have an account?</p>

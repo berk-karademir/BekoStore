@@ -6,13 +6,13 @@ import MostPopularProducts from "../components/MostPopularProducts.jsx";
 import OurClients from "../components/OurClients.jsx";
 import Blog from "../components/Blog.jsx";
 import Footer from "../layout/Footer.jsx";
-import Carousel from "@/layout/Carousel.jsx";
+import HomePageCarousel from "@/layout/HomePageCarousel.jsx";
 
 function HomePage() {
   return (
-    <main>
+    <main >
       <Header/>
-      <Carousel/>
+      <HomePageCarousel/>
       <ShopCards/>
       <BestsellerProducts/>
       <MostPopularProducts/>

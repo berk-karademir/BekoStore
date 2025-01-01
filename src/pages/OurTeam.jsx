@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/layout/Header";
 import axios from "axios";
-import Spinner from "@/components/Spinner";
 import Footer from "@/layout/Footer";
 
 const OurTeam = () => {
@@ -33,7 +32,7 @@ const OurTeam = () => {
       <>
         <Header />
         <div className="flex justify-center items-center min-h-[60vh]">
-          <Spinner />
+        <Loader2 className="animate-spin" />
         </div>
       </>
     );
