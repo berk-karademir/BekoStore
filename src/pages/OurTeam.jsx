@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "@/layout/Header";
 import axios from "axios";
 import Footer from "@/layout/Footer";
+import { LoaderCircle } from "lucide-react";
 
 const OurTeam = () => {
   const [teamData, setTeamData] = useState(null);
@@ -13,7 +14,7 @@ const OurTeam = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          "https://97d6bd57-40be-4949-a4b0-bcb3c2e528b2.mock.pstmn.io/members"
+          "https://api.mockfly.dev/mocks/cb370338-48b0-44c2-a501-1304239241df/members"
         );
         setTeamData(response.data);
       } catch (err) {
@@ -32,7 +33,7 @@ const OurTeam = () => {
       <>
         <Header />
         <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="animate-spin" />
+        <LoaderCircle className="animate-spin" />
         </div>
       </>
     );

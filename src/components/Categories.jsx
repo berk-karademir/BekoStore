@@ -47,9 +47,6 @@ const Categories = () => {
   return (
     <section>
       <div className="flex flex-col items-center gap-10">
-        <h5>
-          Home &#10095; <span className="text-[#737373]">Shop</span>
-        </h5>
         <div className="flex flex-col items-center"></div>
         <div className="flex flex-col items-center gap-10">
           <h3>Top Categories</h3>

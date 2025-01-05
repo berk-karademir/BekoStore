@@ -16,6 +16,7 @@ import {
   deleteAddress,
   submitPayment
 } from '../store/actions/checkoutActions';
+import Bread from '@/components/Bread';
 
 function CheckoutPage() {
   const dispatch = useDispatch();
@@ -76,6 +77,7 @@ function CheckoutPage() {
   return (
     <>
       <Header/>
+      <Bread />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
