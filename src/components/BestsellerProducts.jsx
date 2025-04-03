@@ -7,7 +7,6 @@ function BestsellerProducts() {
       <div className="bg-[url('/images/product-card-1.jpg')] bg-cover bg-center bg-no-repeat min-w-screen min-h-screen">
         <div className="p-6">
           <h5>ORGANIC FOODS</h5>
-          <h6 className="text-[#737373]">products.length Items</h6>
         </div>
       </div>
 
