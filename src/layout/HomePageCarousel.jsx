@@ -35,7 +35,6 @@ function HomePageCarousel() {
       const products = await fetchMostPopularProducts();
       setPopularProducts(products);
     };
-
     loadPopularProducts();
   }, []);
 
@@ -51,53 +50,54 @@ function HomePageCarousel() {
     const categoryId = product.category_id;
     const categoryName = categories.find((cat) => cat.id === categoryId)?.title || "unknown";
     const gender = product.category_id < 9 ? "kadin" : "erkek";
-    history.push(
-      `/shop/${gender}/${createSlug(categoryName)}/${categoryId}/${createSlug(
-        product.name
-      )}/${product.id}`
-    );
+    history.push(`/shop/${gender}/${createSlug(categoryName)}/${categoryId}/${createSlug(product.name)}/${product.id}`);
   };
 
-  // Ürünleri 2'li gruplara böl
   const groupedProducts = [];
-  for (let i = 0; i < popularProducts.length; i += 2) {
-    groupedProducts.push(popularProducts.slice(i, i + 2));
+  for (let i = 0; i < popularProducts.length; i += 4) {
+    groupedProducts.push(popularProducts.slice(i, i + 4));
   }
 
   return (
-    <Carousel>
-      <CarouselContent>
-        {groupedProducts.map((group, index) => (
-          <CarouselItem key={index}>
-            <h3 className="text-center mb-10 mt-20">Most Liked Products</h3>
-            <div className="grid grid-cols-2 gap-4">
-              
-              {group.map((product) => (
-                <div
-                  key={product.id}
-                  className="flex flex-col items-center cursor-pointer"
-                  onClick={() => handleProductClick(product)}
-                >
-                  
-                  <img
-                    src={product.images[0]?.url}
-                    alt={product.name}
-                    className=""
-                  />
-                  <h3 className="mt-4">
-                    {product.name} ({product.rating}⭐)
-                  </h3>
-                  <p className="max-w-[80%] text-center">{product.description}</p>
-                  <Button className="mt-2">Shop Now</Button>
-                </div>
-              ))}
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 rounded-full bg-background/50 p-2 text-primary-foreground hover:bg-background/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
-      <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 rounded-full bg-background/50 p-2 text-primary-foreground hover:bg-background/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
-    </Carousel>
+    <div className=" bg-gray-100 flex flex-col items-center justify-center py-20" >
+      <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
+        Most Liked Products
+      </h2>
+      <Carousel className="max-w-[90%]">
+        <CarouselContent>
+          {groupedProducts.map((group, index) => (
+            <CarouselItem key={index}>
+              <div className="p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
+                {group.map((product) => (
+                  <div
+                    key={product.id}
+                    className="h-full flex flex-col shadow-lg rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform duration-300"
+                    onClick={() => handleProductClick(product)}
+                  >
+                    <img
+                      src={product.images[0]?.url}
+                      alt={product.name}
+                      className="w-full object-cover"
+                    />
+                    <div className="p-4 flex flex-col justify-between items-stretch h-full">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {product.name} ({product.rating}⭐)
+                      </h3>
+                      <p className="text-sm text-left text-gray-600 mb-4 line-clamp-3">
+                        {product.description}
+                      </p>
+                      <Button className="w-full">Shop Now</Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="absolute left-1 top-1/2 transform -translate-y-1/2 hover:scale-[1.1] transition-transform duration-50" />
+        <CarouselNext className="absolute right-1 top-1/2 transform -translate-y-1/2 hover:scale-[1.1] transition-transform duration-50" />
+      </Carousel>
+    </div>
   );
 }
 

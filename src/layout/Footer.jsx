@@ -3,7 +3,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-14">
+    <footer className="text-center xl:text-left flex flex-col items-center justify-center xl:flex bg-gray-900 text-gray-300 py-14">
       <div className="max-w-[80%] mx-auto ">
         {/* Üst Kısım */}
         <div className="text-center mb-10">
@@ -15,9 +15,9 @@ function Footer() {
         </div>
 
         {/* Link Grupları */}
-        <div className="flex flex-col space-y-8">
+        <div className="flex flex-col gap-14 justify-center items-center xl:flex-row xl:gap-40 my-20">
           {/* Company Info */}
-          <div className="">
+          <div className="flex flex-col ">
             <h3 className="text-white font-semibold mb-3">Company Info</h3>
             <ul className="space-y-2">
               <li>About Us</li>
@@ -62,7 +62,7 @@ function Footer() {
         </div>
 
         {/* Alt Kısım - İletişim Bilgileri */}
-        <div className="text-center mt-10 mb-8">
+        <div className="text-center mb-20">
           <h3 className="text-white font-semibold mb-3">Get In Touch</h3>
           <div className="space-y-2">
             <p> 0 500 500 48 48</p>

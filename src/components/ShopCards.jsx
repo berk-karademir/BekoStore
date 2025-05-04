@@ -256,7 +256,7 @@ function ShopCards() {
     <section className="p-10 bg-[#FAFAFA]">
       {/* Header ve Filtreler */}
       <div className="flex flex-col justify-between items-center">
-        <h3 className="text-2xl font-bold mt-4">TÜM ÜRÜNLER</h3>
+        <h3 className="text-2xl font-bold mt-4">All Products</h3>
 
         <div className="flex flex-col md:flex-row w-full max-w-4xl gap-4 items-center my-10">
           {/* Arama Formu */}

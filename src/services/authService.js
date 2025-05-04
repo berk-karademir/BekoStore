@@ -132,10 +132,10 @@ export const logout = () => {
 
 export const fetchMostPopularProducts = async () => {
   try {
-    const response = await authApi.get(`/products?sort=rating:desc`);
+    const response = await authApi.get(`/products?sort=rating:desc&limit=88`);
     console.log("API Yanıtı:", response.data);
     if (response.data && Array.isArray(response.data.products)) {
-      return response.data.products.slice(0, 10);
+      return response.data.products; // No need to slice, fetches 150 directly
     } else {
       throw new Error("Beklenmeyen yanıt formatı");
     }
@@ -144,3 +144,4 @@ export const fetchMostPopularProducts = async () => {
     throw new Error("Ürünler yüklenirken bir hata oluştu");
   }
 };
+
